@@ -1,172 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nietzsche Virus Lab</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-        }
-        .container {
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
-        }
-        h1 {
-            font-size: clamp(32px, 8vw, 56px);
-            font-weight: 600;
-            transition: transform 0.3s ease, color 0.3s ease;
-            cursor: default;
-            margin-bottom: 30px;
-        }
-        h1:hover {
-            transform: rotateX(10deg) rotateY(-5deg);
-            color: #0071e3;
-        }
-        ul.blog-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-            border-top: 1px solid #ddd;
-        }
-        .blog-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        ul.blog-list li a {
-            color: #0071e3;
-            text-decoration: none;
-            font-size: clamp(18px, 5vw, 24px);
-        }
-        ul.blog-list li a:hover {
-            color: #000;
-        }
-        .date {
-            color: #888;
-            font-size: 14px;
-        }
-        #blog-content {
-            text-align: left;
-            line-height: 1.6;
-            margin-top: 20px;
-        }
-        .back-link {
-            color: #0071e3;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nietzsche Virus Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+    h1 {
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      cursor: default;
+      transition: transform 0.3s;
+    }
+    h1:hover {
+      transform: rotateX(15deg) rotateY(10deg);
+      color: #0071e3;
+    }
+    .blog-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+      border-top: 1px solid #ddd;
+    }
+    .blog-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .blog-item a {
+      font-size: 20px;
+      text-decoration: none;
+      color: #0071e3;
+    }
+    .date {
+      color: #999;
+      font-size: 14px;
+    }
+    #blog-content {
+      margin-top: 30px;
+      line-height: 1.6;
+    }
+    .back-link {
+      cursor: pointer;
+      color: #0071e3;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="title-decoder">Nietzsche Virus Lab</h1>
-        <ul class="blog-list" id="blog-list"></ul>
-        <div id="blog-content"></div>
-    </div>
+<div class="container">
+  <h1 id="title">Nietzsche Virus Lab</h1>
+  <ul id="blog-list" class="blog-list"></ul>
+  <div id="blog-content"></div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        const blogs = [
-            { title: "My First Blog", file: "blogs/2025-01-11_blog1.md" },
-            { title: "Second Blog Post", file: "blogs/2024-03-08_blog2.md" }
-            // Add more blogs here following the same filename format
-        ];
+<script>
+  const blogs = [
+    {title: "First Blog", file: "blogs/2024-03-07_blog1.md"},
+    {title: "Second Blog", file: "blogs/2023-11-14_blog2.md"},
+    {title: "Third Blog", file: "blogs/2023-06-20_blog3.md"},
+    // Add more sample blogs here
+  ];
 
-        const blogListEl = document.getElementById('blog-list');
-        const blogContentEl = document.getElementById('blog-content');
-        const titleEl = document.getElementById('title-decoder');
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+  const blogListEl = document.getElementById('blog-list');
+  const blogContentEl = document.getElementById('blog-content');
+  const titleEl = document.getElementById('title');
 
-        function decodeElement(el, finalText, speed) {
-            let iterations = 0;
-            const interval = setInterval(() => {
-                el.textContent = finalText.split('')
-                    .map((char, i) => i < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
-                    .join('');
-                iterations++;
-                if (iterations > finalText.length) {
-                    clearInterval(interval);
-                    el.textContent = finalText;
-                }
-            }, speed);
-        }
+  // Decode animation (working version)
+  function decodeElement(el, finalText, speed) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let iterations = 0;
+    const interval = setInterval(() => {
+      el.textContent = finalText.split('')
+        .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
+        .join('');
+      iterations++;
+      if(iterations > finalText.length) clearInterval(interval);
+    }, speed);
+  }
 
-        // Start decoding animation
-        decodeElement(titleEl, titleEl.innerText, 50);
+  decodeElement(titleEl, titleEl.textContent, 50);
 
-        // Extract date from file name
-        function extractDate(filename) {
-            const match = filename.match(/(\d{4}-\d{2}-\d{2})/);
-            return match ? match[1] : '';
-        }
+  // Extract date from filename
+  function getDate(file){
+    const match = file.match(/\d{4}-\d{2}-\d{2}/);
+    if (!match) return "Unknown";
+    return match[0];
+  }
 
-        // Sort blogs by date descending
-        blogs.sort((a, b) => (extractDate(b.file).localeCompare(extractDate(a.file))));
+  // Sort the blogs by date descending
+  blogs.sort((a,b) => {
+    return getDate(b.file).localeCompare(getDate(a.file));
+  });
 
-        function renderBlogList() {
-            blogContentEl.innerHTML = '';
-            blogListEl.style.display = 'block';
-            blogListEl.innerHTML = '';
-            blogs.forEach(blog => {
-                const li = document.createElement('li');
-                li.className = 'blog-item';
+  const blogList = document.getElementById('blog-list');
+  const blogContent = document.getElementById('blog-content');
 
-                const a = document.createElement('a');
-                a.textContent = blog.title;
-                a.href = "#";
-                a.onclick = (e) => {
-                    e.preventDefault();
-                    loadBlog(blog.file);
-                };
+  function renderBlogList(){
+    blogContent.innerHTML = '';
+    blogList.innerHTML = '';
+    blogList.style.display = 'block';
 
-                const date = document.createElement('span');
-                date.className = 'date';
-                date.textContent = extractDate(blog.file);
+    blogs.forEach(blog => {
+      const li = document.createElement('li');
+      li.className = 'blog-item';
 
-                li = document.createElement('li');
-                li.className = 'blog-item';
-                li.appendChild(a);
-                li.appendChild(date);
+      const a = document.createElement('a');
+      a.href = '#';
+      a.textContent = blog.title;
+      a.onclick = (e) => {
+        e.preventDefault();
+        loadBlog(blog.file);
+      };
 
-                blogListEl.appendChild(li);
-            });
-        }
+      const date = document.createElement('span');
+      date.className = 'date';
+      date.textContent = getDate(blog.file);
 
-        function loadBlog(file) {
-            fetch(file)
-                .then(res => {
-                    if (!res.ok) throw new Error("File not found");
-                    return res.text();
-                })
-                .then(md => {
-                    blogListEl.style.display = 'none';
-                    blogContentEl.innerHTML = marked.parse(md);
+      li.appendChild(a);
+      li.appendChild(date);
+      blogList.appendChild(li);
+    });
+  }
 
-                    const backLink = document.createElement('div');
-                    backLink.textContent = "← Back to Blogs";
-                    backLink.className = 'back-link';
-                    backLink.onclick = () => renderBlogList();
-                    blogContentEl.prepend(backLink);
-                })
-                .catch(() => blogContentEl.innerHTML = '<p>Error loading blog content.</p>');
-            blogListEl.style.display = 'none';
-        }
+  function loadBlog(file){
+    fetch(file)
+      .then(res => res.ok ? res.text() : Promise.reject("Blog not found"))
+      .then(md => {
+        blogList.style.display='none';
+        blogContent.innerHTML = marked.parse(md);
+        const back = document.createElement('div');
+        back.className='back-link';
+        back.textContent='← Back';
+        back.onclick = () => {
+          blogContent.innerHTML='';
+          blogList.style.display='block';
+        };
+        blogContent.prepend(back);
+      })
+      .catch(err => blogContent.innerHTML="<p>Error loading blog.</p>");
+  }
 
-        function extractDate(filename) {
-            return filename.match(/(\d{4}-\d{2}-\d{2})_/)[1];
-        }
-
-        window.onload = renderBlogList;
-    </script>
+  window.onload = () => {
+    decodeElement(titleEl, titleEl.textContent, 50);
+    renderBlogList();
+  };
+</script>
 </body>
 </html>
