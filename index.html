@@ -1,117 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nietzsche Virus Lab</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            perspective: 1000px;
-            max-width: 800px;
-            width: 100%;
-        }
-        h1 {
-            font-size: clamp(32px, 10vw, 56px);
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease;
-            display: inline-block;
-            word-wrap: break-word;
-        }
-        h1:hover {
-            transform: rotateX(20deg) rotateY(20deg) translateZ(50px);
-            color: #0071e3;
-        }
-        .blog-post {
-            text-align: left;
-            margin-top: 40px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        a {
-            color: #0071e3;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nietzsche Virus Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-align: center;
+      transition: transform 0.3s ease;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    h1:hover {
+      transform: rotateX(15deg) rotateY(15deg);
+      color: #0071e3;
+    }
+
+    ul.blog-list {
+      list-style: none;
+      padding: 0;
+      margin: 40px 0;
+    }
+
+    ul.blog-list li {
+      margin: 10px 0;
+    }
+
+    ul.blog-list li a {
+      font-size: clamp(18px, 5vw, 24px);
+      color: #0071e3;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    ul.blog-list li a:hover {
+      color: #1d1d1f;
+    }
+
+    #blog-content {
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+
+    a.back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #0071e3;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+    }
+
+    .decoding {
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="title-decoder">Nietzsche Virus Lab</h1>
-        <div id="blog-container"></div>
-    </div>
+  <div class="container">
+    <h1 id="title-decoder">Nietzsche Virus Lab</h1>
 
-    <script>
-        function decodeElement(element, finalText, speed) {
-            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let decodedText = "";
-            let index = 0;
+    <ul class="blog-list" id="blog-list"></ul>
 
-            function getRandomChar() {
-                return characters[Math.floor(Math.random() * characters.length)];
-            }
+    <div id="blog-content"></div>
+  </div>
 
-            function decode() {
-                if (index < finalText.length) {
-                    decodedText = finalText.slice(0, index);
-                    let randomPart = "";
-                    for (let i = index; i < finalText.length; i++) {
-                        randomPart += getRandomChar();
-                    }
-                    element.innerHTML = decodedText + randomPart;
-                    element.classList.add('decoding');
-                    index++;
-                    setTimeout(decode, speed);
-                } else {
-                    element.innerHTML = finalText;
-                    element.classList.remove('decoding');
-                }
-            }
+  <script>
+    const blogs = [
+      { title: "My First Blog", file: "blogs/blog1.md" },
+      { title: "Another Blog Post", file: "blogs/blog2.md" },
+      // Add more blog entries here
+    ];
 
-            decode();
+    // Decode animation
+    function decodeText(el, finalText, speed = 50) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      let iterations = 0;
+
+      function scramble() {
+        el.textContent = finalText
+          .split('')
+          .map((char, i) => i < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
+          .join('');
+
+        if (iterations < finalText.length) {
+          iterations++;
+          setTimeout(scramble, speed);
         }
+      }
 
-        async function loadBlogPosts() {
-            const posts = ["blog1.md", "blog2.md"]; // Add markdown filenames here
-            const container = document.getElementById('blog-container');
+      const el = document.getElementById(elId);
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      scramble();
+    }
 
-            for (const post of posts) {
-                const response = await fetch(post);
-                const markdown = await response.text();
-                const htmlContent = marked.parse(markdown);
+    // Title Decoding Animation
+    const el = document.getElementById('title-decoder');
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    const text = el.textContent;
+    let interval = setInterval(() => {
+      el.textContent = text.split('')
+        .map((char, i) => i < text.length ? chars[Math.floor(Math.random() * chars.length)] : char)
+        .join('');
+    }, 50);
 
-                const postDiv = document.createElement('div');
-                postDiv.className = 'blog-post';
-                postDiv.innerHTML = htmlContent;
+    setTimeout(() => {
+      clearInterval(interval);
+      el.textContent = text;
+    }, 1000);
 
-                container.appendChild(postDiv);
-            }
-        }
+    const blogListEl = document.getElementById('blog-list');
+    const blogContentEl = document.getElementById('blog-content');
 
-        window.onload = function() {
-            decodeElement(document.getElementById('title-decoder'), 'Nietzsche Virus Lab', 50);
-            loadBlogPosts();
-        };
-    </script>
+    // Populate blog list
+    blogs.forEach(blog => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.textContent = blog.title;
+      a.href = "#";
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadBlog(blog);
+      });
+      li.appendChild(a);
+      blogListEl.appendChild(li);
+    });
+
+    function loadBlog(blog) {
+      fetch(blog.file)
+        .then(res => res.text())
+        .then(markdown => {
+          blogList.style.display = "none";
+          blogContent.innerHTML = marked.parse(markdown);
+
+          const backLink = document.createElement('a');
+          backLink.textContent = "← Back to Blogs";
+          backLink.className = "back-link";
+          backLink.onclick = () => {
+            blogContent.innerHTML = "";
+            blogListEl.style.display = "block";
+          };
+
+          blogContent.appendChild(backLink);
+        })
+        .catch(err => blogContent.textContent = "Error loading blog content.");
+    });
+
+    const blogListEl = document.getElementById('blog-list');
+    const blogContent = document.getElementById('blog-content');
+
+    // Ensure responsive text wrapping in markdown
+    marked.setOptions({ breaks: true });
+  </script>
 </body>
 </html>
