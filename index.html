@@ -43,7 +43,6 @@
             max-width: 600px;
             margin: 0 auto;
             line-height: 1.4;
-            position: relative;
             display: inline-block;
         }
         .dot {
@@ -51,40 +50,10 @@
             font-size: clamp(18px, 5vw, 28px);
         }
 
-        /* Hacker Decoding Effect */
-        .decoder {
-            display: inline-block;
-            animation: decode 3s steps(30) forwards;
-        }
-        @keyframes decode {
-            0% {
-                color: #6e6e73;
-                text-shadow: 0 0 5px #0071e3;
-            }
-            20% {
-                content: "X7K9P#M2$Q8R%T3&J5L*W1";
-                color: #0071e3;
-                text-shadow: 0 0 10px #0071e3;
-            }
-            40% {
-                content: "N4$F8@V6!H2&D9%K3*P7M#";
-                color: #0071e3;
-                text-shadow: 0 0 8px #0071e3;
-            }
-            60% {
-                content: "G1!J5#Q9&T3$R8%M2@P7K*";
-                color: #0071e3;
-                text-shadow: 0 0 6px #0071e3;
-            }
-            80% {
-                content: "Th1s w3b$!te 1s curr3ntly";
-                color: #6e6e73;
-                text-shadow: 0 0 3px #0071e3;
-            }
-            100% {
-                color: #6e6e73;
-                text-shadow: none;
-            }
+        /* Optional glow during decoding */
+        .decoding {
+            text-shadow: 0 0 5px #0071e3;
+            transition: text-shadow 0.3s ease;
         }
 
         /* Media Queries for Responsiveness */
@@ -96,7 +65,7 @@
                 margin-bottom: 12px;
             }
             p {
-                white-space: normal; /* Wraps text on small screens */
+                white-space: normal;
             }
         }
     </style>
@@ -104,7 +73,41 @@
 <body>
     <div class="container">
         <h1>Nietzsche Virus Lab</h1>
-        <p class="decoder">This website is currently under construction. Check back soon<span class="dot">.</span></p>
+        <p id="decoder">This website is currently under construction. Check back soon<span class="dot">.</span></p>
     </div>
+    <script>
+        const decoder = document.getElementById('decoder');
+        const finalText = "This website is currently under construction. Check back soon.";
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        let decodedText = "";
+        let index = 0;
+        const speed = 50; // Milliseconds per character update
+
+        function getRandomChar() {
+            return characters[Math.floor(Math.random() * characters.length)];
+        }
+
+        function decode() {
+            if (index < finalText.length) {
+                decodedText = finalText.slice(0, index);
+                let randomPart = "";
+                for (let i = index; i < finalText.length; i++) {
+                    randomPart += getRandomChar();
+                }
+                decoder.textContent = decodedText + randomPart + '<span class="dot">.</span>';
+                decoder.classList.add('decoding');
+                index++;
+                setTimeout(decode, speed);
+            } else {
+                decoder.textContent = finalText + '<span class="dot">.</span>';
+                decoder.classList.remove('decoding'); // Glow fades when done
+            }
+        }
+
+        // Start decoding on page load
+        window.onload = function() {
+            decode();
+        };
+    </script>
 </body>
 </html>
