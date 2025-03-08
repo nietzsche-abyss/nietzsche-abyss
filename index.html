@@ -1,182 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nietzsche Virus Lab</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-      background-color: #f5f5f7;
-      color: #1d1d1f;
-      overflow-x: hidden;
-      display: flex;
-      justify-content: center;
-    }
-
-    .container {
-      max-width: 700px;
-      width: 100%;
-      perspective: 1000px;
-    }
-
-    h1 {
-      font-size: clamp(32px, 8vw, 56px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      text-align: center;
-      transition: transform 0.3s ease;
-      transform-style: preserve-3d;
-      cursor: pointer;
-    }
-
-    h1:hover {
-      transform: rotateX(15deg) rotateY(15deg);
-      color: #0071e3;
-    }
-
-    ul.blog-list {
-      list-style: none;
-      padding: 0;
-      margin: 40px 0;
-    }
-
-    ul.blog-list li {
-      margin: 10px 0;
-    }
-
-    ul.blog-list li a {
-      font-size: clamp(18px, 5vw, 24px);
-      color: #0071e3;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    ul.blog-list li a:hover {
-      color: #1d1d1f;
-    }
-
-    #blog-content {
-      margin-top: 20px;
-      line-height: 1.6;
-    }
-
-    a.back-link {
-      display: inline-block;
-      margin-top: 20px;
-      color: #0071e3;
-      cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-    }
-
-    .decoding {
-      opacity: 0.8;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1 id="title-decoder">Nietzsche Virus Lab</h1>
-
-    <ul class="blog-list" id="blog-list"></ul>
-
-    <div id="blog-content"></div>
-  </div>
-
-  <script>
-    const blogs = [
-      { title: "My First Blog", file: "blogs/blog1.md" },
-      { title: "Another Blog Post", file: "blogs/blog2.md" },
-      // Add more blog entries here
-    ];
-
-    // Decode animation
-    function decodeText(el, finalText, speed = 50) {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-      let iterations = 0;
-
-      function scramble() {
-        el.textContent = finalText
-          .split('')
-          .map((char, i) => i < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
-          .join('');
-
-        if (iterations < finalText.length) {
-          iterations++;
-          setTimeout(scramble, speed);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nietzsche Virus Lab</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 40px 20px;
         }
-      }
 
-      const el = document.getElementById(elId);
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-      scramble();
-    }
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
 
-    // Title Decoding Animation
-    const el = document.getElementById('title-decoder');
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    const text = el.textContent;
-    let interval = setInterval(() => {
-      el.textContent = text.split('')
-        .map((char, i) => i < text.length ? chars[Math.floor(Math.random() * chars.length)] : char)
-        .join('');
-    }, 50);
+        h1 {
+            font-size: clamp(32px, 10vw, 56px);
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: -0.02em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+            word-wrap: break-word;
+        }
 
-    setTimeout(() => {
-      clearInterval(interval);
-      el.textContent = text;
-    }, 1000);
+        h1:hover {
+            transform: rotateX(10deg) rotateY(-5deg);
+        }
 
-    const blogListEl = document.getElementById('blog-list');
-    const blogContentEl = document.getElementById('blog-content');
+        ul.blog-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
 
-    // Populate blog list
-    blogs.forEach(blog => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.textContent = blog.title;
-      a.href = "#";
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        loadBlog(blog);
-      });
-      li.appendChild(a);
-      blogListEl.appendChild(li);
-    });
+        ul.blog-list li {
+            margin: 12px 0;
+        }
 
-    function loadBlog(blog) {
-      fetch(blog.file)
-        .then(res => res.text())
-        .then(markdown => {
-          blogList.style.display = "none";
-          blogContent.innerHTML = marked.parse(markdown);
+        ul.blog-list li a {
+            font-size: 1.2rem;
+            color: #0071e3;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
 
-          const backLink = document.createElement('a');
-          backLink.textContent = "← Back to Blogs";
-          backLink.className = "back-link";
-          backLink.onclick = () => {
-            blogContent.innerHTML = "";
-            blogListEl.style.display = "block";
-          };
+        ul.blog-list li a:hover {
+            color: #000;
+        }
 
-          blogContent.appendChild(backLink);
-        })
-        .catch(err => blogContent.textContent = "Error loading blog content.");
-    });
+        #blog-content {
+            margin-top: 20px;
+            line-height: 1.6;
+        }
 
-    const blogListEl = document.getElementById('blog-list');
-    const blogContent = document.getElementById('blog-content');
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0071e3;
+            cursor: pointer;
+        }
 
-    // Ensure responsive text wrapping in markdown
-    marked.setOptions({ breaks: true });
-  </script>
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="title-decoder">Nietzsche Virus Lab</h1>
+        <ul class="blog-list" id="blog-list"></ul>
+        <div id="blog-content"></div>
+    </div>
+
+    <script>
+        // Decoding animation
+        function decodeElement(element, finalText, speed) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let displayText = "";
+            let i = 0;
+
+            const decodeInterval = setInterval(() => {
+                elementText = finalText.split('')
+                    .map((char, idx) => idx < i ? char : chars[Math.floor(Math.random() * chars.length)])
+                    .join('');
+
+                element.innerText = elementText;
+
+                if (i >= finalText.length) clearInterval(decodeInterval);
+                i += 1;
+            }, speed);
+        }, speed);
+
+        const element = document.getElementById('title-decoder');
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        const finalText = element.innerText;
+        decodeElement(element, finalText, 50);
+
+        function decodeElement(el, text, speed) {
+            let iterations = 0;
+            const interval = setInterval(() => {
+                el.innerText = text
+                    .split('')
+                    .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
+                    .join('');
+
+                if (iterations >= text.length) clearInterval(interval);
+                iterations++;
+            }, speed);
+        }
+
+        decodeElement(document.getElementById('title-decoder'), 'Nietzsche Virus Lab', 50);
+
+        const blogs = [
+            { title: "First Blog", file: "blogs/blog1.md" },
+            { title: "Second Blog", file: "blogs/blog2.md" },
+            // Add more blogs here
+        ];
+
+        const blogListEl = document.getElementById('blog-list');
+        const blogContentEl = document.getElementById('blog-content');
+
+        function showBlogList() {
+            blogContentEl.innerHTML = '';
+            blogListEl.innerHTML = '';
+            blogListEl.style.display = 'block';
+
+            blogs.forEach(blog => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.innerText = blog.title;
+                a.href = "#";
+                a.onclick = () => {
+                    loadBlog(blog);
+                };
+                li.appendChild(a);
+                blogListEl.appendChild(li);
+            });
+        }
+
+        function loadBlog(blog) {
+            fetch(blog.file)
+                .then(response => response.text())
+                .then(markdown => {
+                    blogContentEl.innerHTML = marked.parse(markdown);
+                    blogListEl.style.display = "none";
+
+                    const backLink = document.createElement('a');
+                    backLink.innerText = "← Back to blog list";
+                    backLink.href = "#";
+                    backLink.className = "back-link";
+                    backLink.onclick = () => {
+                        blogContentEl.innerHTML = '';
+                        blogListEl.style.display = 'block';
+                    };
+                    blogContentEl.appendChild(backLink);
+                })
+                .catch(() => {
+                    blogContentEl.innerHTML = '<p>Blog could not be loaded.</p>';
+                });
+            blogListEl.style.display = 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            decodeElement(document.getElementById('title-decoder'), "Nietzsche Virus Lab", 50);
+            showBlogList();
+        });
+
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    </script>
 </body>
 </html>
