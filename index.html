@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,76 +8,63 @@
     <style>
         body {
             margin: 0;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
             background-color: #f5f5f7;
             color: #1d1d1f;
-            padding: 40px 20px;
+            overflow-x: hidden;
         }
-
         .container {
-            width: 100%;
             max-width: 700px;
-        }
-
-        h1 {
-            font-size: clamp(32px, 10vw, 56px);
-            font-weight: 600;
+            width: 100%;
             text-align: center;
+            perspective: 1000px;
+        }
+        h1 {
+            font-size: clamp(32px, 8vw, 56px);
+            font-weight: 600;
             letter-spacing: -0.02em;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            transform-style: preserve-3d;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            display: inline-block;
             word-wrap: break-word;
         }
-
         h1:hover {
-            transform: rotateX(10deg) rotateY(-5deg);
+            transform: rotateX(15deg) rotateY(-10deg);
+            color: #0071e3;
         }
-
         ul.blog-list {
             list-style: none;
             padding: 0;
             margin-top: 30px;
         }
-
         ul.blog-list li {
-            margin: 12px 0;
+            margin-bottom: 10px;
         }
-
         ul.blog-list li a {
-            font-size: 1.2rem;
             color: #0071e3;
             text-decoration: none;
-            transition: color 0.2s;
+            font-size: clamp(18px, 5vw, 24px);
         }
-
         ul.blog-list li a:hover {
             color: #000;
         }
-
         #blog-content {
             margin-top: 20px;
             line-height: 1.6;
         }
-
         .back-link {
             display: inline-block;
             margin-top: 20px;
             color: #0071e3;
             cursor: pointer;
         }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 20px 10px;
-            }
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-
 <body>
     <div class="container">
         <h1 id="title-decoder">Nietzsche Virus Lab</h1>
@@ -87,101 +73,78 @@
     </div>
 
     <script>
-        // Decoding animation
-        function decodeElement(element, finalText, speed) {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let displayText = "";
-            let i = 0;
-
-            const decodeInterval = setInterval(() => {
-                elementText = finalText.split('')
-                    .map((char, idx) => idx < i ? char : chars[Math.floor(Math.random() * chars.length)])
-                    .join('');
-
-                element.innerText = elementText;
-
-                if (i >= finalText.length) clearInterval(decodeInterval);
-                i += 1;
-            }, speed);
-        }, speed);
-
-        const element = document.getElementById('title-decoder');
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-        const finalText = element.innerText;
-        decodeElement(element, finalText, 50);
-
-        function decodeElement(el, text, speed) {
-            let iterations = 0;
-            const interval = setInterval(() => {
-                el.innerText = text
-                    .split('')
-                    .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
-                    .join('');
-
-                if (iterations >= text.length) clearInterval(interval);
-                iterations++;
-            }, speed);
-        }
-
-        decodeElement(document.getElementById('title-decoder'), 'Nietzsche Virus Lab', 50);
-
         const blogs = [
-            { title: "First Blog", file: "blogs/blog1.md" },
-            { title: "Second Blog", file: "blogs/blog2.md" },
-            // Add more blogs here
+            { title: "First Blog Post", file: "blogs/blog1.md" },
+            { title: "Second Blog", file: "blogs/blog2.md" }
+            // Add more blog posts here
         ];
 
         const blogListEl = document.getElementById('blog-list');
         const blogContentEl = document.getElementById('blog-content');
+        const titleDecoder = document.getElementById('title-decoder');
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 
+        // Decoding animation function
+        function decodeElement(element, finalText, speed) {
+            let iterations = 0;
+            const interval = setInterval(() => {
+                element.textContent = finalText.split('')
+                    .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
+                    .join('');
+                iterations++;
+                if (iterations > finalText.length) clearInterval(interval);
+            }, speed);
+        }
+
+        // Start decoding animation on page load
+        window.onload = function() {
+            decodeElement(titleDecoder, "Nietzsche Virus Lab", 50);
+            showBlogList();
+        };
+
+        // Display blog titles
         function showBlogList() {
-            blogContentEl.innerHTML = '';
-            blogListEl.innerHTML = '';
-            blogListEl.style.display = 'block';
-
             blogs.forEach(blog => {
                 const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.innerText = blog.title;
+                const link = document.createElement('a');
+                link.href = "#";
+                link = document.createElement('a');
+                link.href = "#";
+                linkText = document.createTextNode(blog.title);
+                a = document.createElement('a');
+                a.textContent = blog.title;
                 a.href = "#";
-                a.onclick = () => {
-                    loadBlog(blog);
+                a.onclick = function(e) {
+                    e.preventDefault();
+                    loadBlog(blog.file);
                 };
                 li.appendChild(a);
-                blogListEl.appendChild(li);
+                blogList.appendChild(li);
             });
         }
 
-        function loadBlog(blog) {
-            fetch(blog.file)
+        // Load blog content from markdown file
+        function loadBlog(file) {
+            fetch(file)
                 .then(response => response.text())
                 .then(markdown => {
-                    blogContentEl.innerHTML = marked.parse(markdown);
-                    blogListEl.style.display = "none";
-
+                    blogList.style.display = 'none';
+                    blogContent.innerHTML = marked.parse(markdown);
                     const backLink = document.createElement('a');
-                    backLink.innerText = "← Back to blog list";
-                    backLink.href = "#";
+                    backLink.textContent = "← Back to Blogs";
                     backLink.className = "back-link";
-                    backLink.onclick = () => {
-                        blogContentEl.innerHTML = '';
-                        blogListEl.style.display = 'block';
+                    backLink.onclick = function() {
+                        blogContent.innerHTML = '';
+                        blogList.style.display = 'block';
                     };
-                    blogContentEl.appendChild(backLink);
+                    blogContent.appendChild(backLink);
                 })
-                .catch(() => {
-                    blogContentEl.innerHTML = '<p>Blog could not be loaded.</p>';
-                });
-            blogListEl.style.display = 'none';
+                .catch(() => blogContent.innerHTML = "<p>Error loading blog.</p>");
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            decodeElement(document.getElementById('title-decoder'), "Nietzsche Virus Lab", 50);
-            showBlogList();
-        });
-
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        // Corrected variables
+        const blogList = document.getElementById('blog-list');
+        const blogContent = document.getElementById('blog-content');
     </script>
 </body>
 </html>
