@@ -16,28 +16,70 @@
             background-color: #f5f5f7;
             color: #1d1d1f;
             overflow-x: hidden;
+            position: relative;
         }
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.1) 2px, transparent 2px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            animation: drift 15s infinite linear;
+            z-index: -1; /* Behind content */
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(10px, 10px); }
+            100% { transform: translate(0, 0); }
+        }
+        /* Additional particle layer */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            animation: drift-reverse 20s infinite linear;
+            z-index: -1;
+        }
+        @keyframes drift-reverse {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-15px, -15px); }
+            100% { transform: translate(0, 0); }
+        }
+
         .container {
             text-align: center;
             padding: 20px;
             perspective: 1000px;
-            max-width: 90%; /* Prevents overflow on small screens */
+            max-width: 90%;
+            position: relative; /* Above background */
+            z-index: 1;
         }
         h1 {
-            font-size: clamp(32px, 10vw, 56px); /* Scales between 32px and 56px */
+            font-size: clamp(32px, 10vw, 56px);
             font-weight: 600;
             margin-bottom: 16px;
             letter-spacing: -0.02em;
             transform-style: preserve-3d;
             transition: transform 0.3s ease;
-            word-wrap: break-word; /* Ensures long words break */
+            word-wrap: break-word;
         }
         h1:hover {
             transform: rotateX(20deg) rotateY(20deg) translateZ(50px);
             color: #0071e3;
         }
         p {
-            font-size: clamp(16px, 5vw, 24px); /* Scales between 16px and 24px */
+            font-size: clamp(16px, 5vw, 24px);
             font-weight: 400;
             color: #6e6e73;
             max-width: 600px;
@@ -46,7 +88,7 @@
             overflow: hidden;
             white-space: nowrap;
             border-right: 2px solid #0071e3;
-            animation: typing 3s steps(40, end) infinite, blink 0.75s step-end infinite;
+            animation: typing 2.5s steps(40, end) forwards, blink 0.75s step-end 2.5s;
         }
         .dot {
             color: #0071e3;
@@ -55,12 +97,12 @@
 
         /* Typing Animation */
         @keyframes typing {
-            0% { width: 0; }
-            50% { width: 100%; }
-            100% { width: 0; }
+            from { width: 0; }
+            to { width: 100%; }
         }
         @keyframes blink {
             50% { border-color: transparent; }
+            100% { border-color: transparent; }
         }
 
         /* Media Queries for Responsiveness */
@@ -72,9 +114,14 @@
                 margin-bottom: 12px;
             }
             p {
-                white-space: normal; /* Allows text to wrap on small screens */
-                animation: none; /* Disables typing animation for readability */
-                border-right: none; /* Removes cursor on mobile */
+                white-space: normal;
+                animation: typing 2.5s steps(40, end) forwards;
+                border-right: none;
+            }
+            /* Reduce background animation intensity on mobile */
+            body::before, body::after {
+                background-size: 15px 15px;
+                animation-duration: 25s; /* Slower for less distraction */
             }
         }
     </style>
