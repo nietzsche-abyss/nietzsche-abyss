@@ -18,7 +18,7 @@
             overflow-x: hidden;
             position: relative;
         }
-        /* Background Animation */
+        /* Background Animation - Layer 1 */
         body::before {
             content: '';
             position: absolute;
@@ -26,18 +26,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.1) 2px, transparent 2px);
-            background-size: 20px 20px;
-            opacity: 0.5;
-            animation: drift 15s infinite linear;
-            z-index: -1; /* Behind content */
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 2px, transparent 2px);
+            background-size: 25px 25px;
+            opacity: 0.6;
+            animation: drift 10s infinite ease-in-out;
+            z-index: -1;
         }
         @keyframes drift {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(10px, 10px); }
-            100% { transform: translate(0, 0); }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, 50px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
-        /* Additional particle layer */
+        /* Background Animation - Layer 2 */
         body::after {
             content: '';
             position: absolute;
@@ -45,16 +45,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 1px, transparent 1px);
-            background-size: 30px 30px;
-            opacity: 0.3;
-            animation: drift-reverse 20s infinite linear;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.2) 1px, transparent 1px);
+            background-size: 35px 35px;
+            opacity: 0.4;
+            animation: drift-reverse 12s infinite ease-in-out;
             z-index: -1;
         }
         @keyframes drift-reverse {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-15px, -15px); }
-            100% { transform: translate(0, 0); }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-60px, -60px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
 
         .container {
@@ -62,7 +62,7 @@
             padding: 20px;
             perspective: 1000px;
             max-width: 90%;
-            position: relative; /* Above background */
+            position: relative;
             z-index: 1;
         }
         h1 {
@@ -118,10 +118,12 @@
                 animation: typing 2.5s steps(40, end) forwards;
                 border-right: none;
             }
-            /* Reduce background animation intensity on mobile */
-            body::before, body::after {
-                background-size: 15px 15px;
-                animation-duration: 25s; /* Slower for less distraction */
+            /* Adjust background animation for mobile */
+            body::before {
+                animation: drift 15s infinite ease-in-out;
+            }
+            body::after {
+                animation: drift-reverse 18s infinite ease-in-out;
             }
         }
     </style>
