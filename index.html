@@ -9,28 +9,23 @@
         body {
             margin: 0;
             padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
             background-color: #f5f5f7;
             color: #1d1d1f;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
         .container {
             max-width: 700px;
             width: 100%;
-            text-align: center;
-            perspective: 1000px;
         }
         h1 {
             font-size: clamp(32px, 8vw, 56px);
             font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 20px;
             transition: transform 0.3s ease, color 0.3s ease;
-            display: inline-block;
-            word-wrap: break-word;
+            cursor: pointer;
+            margin-bottom: 30px;
         }
         h1:hover {
             transform: rotateX(15deg) rotateY(-10deg);
@@ -39,31 +34,29 @@
         ul.blog-list {
             list-style: none;
             padding: 0;
-            margin-top: 30px;
         }
         ul.blog-list li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         ul.blog-list li a {
             color: #0071e3;
             text-decoration: none;
-            font-size: clamp(18px, 5vw, 24px);
+            font-size: 20px;
+            transition: color 0.2s;
         }
         ul.blog-list li a:hover {
             color: #000;
         }
         #blog-content {
-            margin-top: 20px;
             line-height: 1.6;
         }
         .back-link {
-            display: inline-block;
             margin-top: 20px;
+            display: inline-block;
             color: #0071e3;
             cursor: pointer;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -74,77 +67,71 @@
 
     <script>
         const blogs = [
-            { title: "First Blog Post", file: "blogs/blog1.md" },
-            { title: "Second Blog", file: "blogs/blog2.md" }
-            // Add more blog posts here
+            { title: "My First Blog", file: "blogs/blog1.md" },
+            // Add more blogs here as needed
         ];
 
-        const blogListEl = document.getElementById('blog-list');
-        const blogContentEl = document.getElementById('blog-content');
-        const titleDecoder = document.getElementById('title-decoder');
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        const blogList = document.getElementById('blog-list');
+        const blogContent = document.getElementById('blog-content');
+        const titleEl = document.getElementById('title-decoder');
 
-        // Decoding animation function
-        function decodeElement(element, finalText, speed) {
+        // Decoding animation (working properly)
+        function decodeElement(el, finalText, speed) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
             let iterations = 0;
             const interval = setInterval(() => {
-                element.textContent = finalText.split('')
-                    .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
+                el.textContent = finalText.split('')
+                    .map((char, i) => i < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
                     .join('');
+                if (iterations >= finalText.length) clearInterval(interval);
                 iterations++;
-                if (iterations > finalText.length) clearInterval(interval);
             }, speed);
         }
 
-        // Start decoding animation on page load
-        window.onload = function() {
-            decodeElement(titleDecoder, "Nietzsche Virus Lab", 50);
-            showBlogList();
-        };
-
-        // Display blog titles
-        function showBlogList() {
+        // Show list of blogs
+        function renderBlogList() {
+            blogContent.innerHTML = '';
+            blogList.style.display = 'block';
+            blogList.innerHTML = '';
             blogs.forEach(blog => {
                 const li = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = "#";
-                link = document.createElement('a');
-                link.href = "#";
-                linkText = document.createTextNode(blog.title);
-                a = document.createElement('a');
+                const a = document.createElement('a');
                 a.textContent = blog.title;
                 a.href = "#";
-                a.onclick = function(e) {
+                a.addEventListener('click', (e) => {
                     e.preventDefault();
                     loadBlog(blog.file);
-                };
+                });
                 li.appendChild(a);
                 blogList.appendChild(li);
             });
         }
 
-        // Load blog content from markdown file
-        function loadBlog(file) {
-            fetch(file)
-                .then(response => response.text())
-                .then(markdown => {
-                    blogList.style.display = 'none';
-                    blogContent.innerHTML = marked.parse(markdown);
-                    const backLink = document.createElement('a');
-                    backLink.textContent = "← Back to Blogs";
-                    backLink.className = "back-link";
-                    backLink.onclick = function() {
-                        blogContent.innerHTML = '';
-                        blogList.style.display = 'block';
-                    };
-                    blogContent.appendChild(backLink);
+        // Load and show markdown blog
+        function loadBlog(filePath) {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('File not found');
+                    return response.text();
                 })
-                .catch(() => blogContent.innerHTML = "<p>Error loading blog.</p>");
+                .then(md => {
+                    blogList.style.display = 'none';
+                    blogContent.innerHTML = marked.parse(md);
+
+                    const backLink = document.createElement('div');
+                    backLink.textContent = '← Back to Blogs';
+                    backLink.className = 'back-link';
+                    backLink.onclick = () => renderBlogList();
+                    blogContent.prepend(backLink);
+                })
+                .catch(() => blogContent.innerHTML = '<p>Error loading blog content.</p>');
         }
 
-        // Corrected variables
-        const blogList = document.getElementById('blog-list');
-        const blogContent = document.getElementById('blog-content');
+        // Initialize
+        window.onload = function () {
+            decodeElement(titleEl, titleEl.innerText, 50);
+            renderBlogList();
+        };
     </script>
 </body>
 </html>
