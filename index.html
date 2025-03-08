@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nietzsche Virus Lab</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
             background-color: #f5f5f7;
             color: #1d1d1f;
-            overflow-x: hidden;
         }
         .container {
             text-align: center;
             padding: 20px;
             perspective: 1000px;
-            max-width: 90%;
+            max-width: 800px;
+            width: 100%;
         }
         h1 {
             font-size: clamp(32px, 10vw, 56px);
@@ -30,52 +31,37 @@
             letter-spacing: -0.02em;
             transform-style: preserve-3d;
             transition: transform 0.3s ease;
-            word-wrap: break-word;
             display: inline-block;
+            word-wrap: break-word;
         }
         h1:hover {
             transform: rotateX(20deg) rotateY(20deg) translateZ(50px);
             color: #0071e3;
         }
-        p {
-            font-size: clamp(16px, 5vw, 24px);
-            font-weight: 400;
-            color: #6e6e73;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.4;
-            display: inline-block;
+        .blog-post {
+            text-align: left;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .dot {
+        a {
             color: #0071e3;
-            font-size: clamp(18px, 5vw, 28px);
+            text-decoration: none;
         }
-        .decoding {
-            text-shadow: 0 0 5px #0071e3;
-            transition: text-shadow 0.3s ease;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            h1 {
-                margin-bottom: 12px;
-            }
-            p {
-                white-space: normal;
-            }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 id="title-decoder">Nietzsche Virus Lab</h1>
-        <p id="text-decoder">This website is currently under construction. Check back soon<span class="dot">.</span></p>
+        <div id="blog-container"></div>
     </div>
+
     <script>
-        // Decoding function for any element
         function decodeElement(element, finalText, speed) {
             const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
             let decodedText = "";
@@ -105,16 +91,26 @@
             decode();
         }
 
-        // Elements and their final texts
-        const titleDecoder = document.getElementById('title-decoder');
-        const textDecoder = document.getElementById('text-decoder');
-        const titleText = "Nietzsche Virus Lab";
-        const textText = "This website is currently under construction. Check back soon<span class=\"dot\">.</span>";
+        async function loadBlogPosts() {
+            const posts = ["blog1.md", "blog2.md"]; // Add markdown filenames here
+            const container = document.getElementById('blog-container');
 
-        // Start decoding on page load
+            for (const post of posts) {
+                const response = await fetch(post);
+                const markdown = await response.text();
+                const htmlContent = marked.parse(markdown);
+
+                const postDiv = document.createElement('div');
+                postDiv.className = 'blog-post';
+                postDiv.innerHTML = htmlContent;
+
+                container.appendChild(postDiv);
+            }
+        }
+
         window.onload = function() {
-            decodeElement(titleDecoder, titleText, 50); // Title decodes at 50ms per character
-            setTimeout(() => decodeElement(textDecoder, textText, 50), 1000); // Text starts 1s later
+            decodeElement(document.getElementById('title-decoder'), 'Nietzsche Virus Lab', 50);
+            loadBlogPosts();
         };
     </script>
 </body>
