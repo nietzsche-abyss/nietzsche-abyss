@@ -31,6 +31,7 @@
             transform-style: preserve-3d;
             transition: transform 0.3s ease;
             word-wrap: break-word;
+            display: inline-block;
         }
         h1:hover {
             transform: rotateX(20deg) rotateY(20deg) translateZ(50px);
@@ -49,8 +50,6 @@
             color: #0071e3;
             font-size: clamp(18px, 5vw, 28px);
         }
-
-        /* Optional glow during decoding */
         .decoding {
             text-shadow: 0 0 5px #0071e3;
             transition: text-shadow 0.3s ease;
@@ -72,41 +71,50 @@
 </head>
 <body>
     <div class="container">
-        <h1>Nietzsche Virus Lab</h1>
-        <p id="decoder">This website is currently under construction. Check back soon<span class="dot">.</span></p>
+        <h1 id="title-decoder">Nietzsche Virus Lab</h1>
+        <p id="text-decoder">This website is currently under construction. Check back soon<span class="dot">.</span></p>
     </div>
     <script>
-        const decoder = document.getElementById('decoder');
-        const finalText = "This website is currently under construction. Check back soon.";
-        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-        let decodedText = "";
-        let index = 0;
-        const speed = 50; // Milliseconds per character update
+        // Decoding function for any element
+        function decodeElement(element, finalText, speed) {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let decodedText = "";
+            let index = 0;
 
-        function getRandomChar() {
-            return characters[Math.floor(Math.random() * characters.length)];
-        }
-
-        function decode() {
-            if (index < finalText.length) {
-                decodedText = finalText.slice(0, index);
-                let randomPart = "";
-                for (let i = index; i < finalText.length; i++) {
-                    randomPart += getRandomChar();
-                }
-                decoder.textContent = decodedText + randomPart + '<span class="dot">.</span>';
-                decoder.classList.add('decoding');
-                index++;
-                setTimeout(decode, speed);
-            } else {
-                decoder.textContent = finalText + '<span class="dot">.</span>';
-                decoder.classList.remove('decoding'); // Glow fades when done
+            function getRandomChar() {
+                return characters[Math.floor(Math.random() * characters.length)];
             }
+
+            function decode() {
+                if (index < finalText.length) {
+                    decodedText = finalText.slice(0, index);
+                    let randomPart = "";
+                    for (let i = index; i < finalText.length; i++) {
+                        randomPart += getRandomChar();
+                    }
+                    element.innerHTML = decodedText + randomPart;
+                    element.classList.add('decoding');
+                    index++;
+                    setTimeout(decode, speed);
+                } else {
+                    element.innerHTML = finalText;
+                    element.classList.remove('decoding');
+                }
+            }
+
+            decode();
         }
+
+        // Elements and their final texts
+        const titleDecoder = document.getElementById('title-decoder');
+        const textDecoder = document.getElementById('text-decoder');
+        const titleText = "Nietzsche Virus Lab";
+        const textText = "This website is currently under construction. Check back soon<span class=\"dot\">.</span>";
 
         // Start decoding on page load
         window.onload = function() {
-            decode();
+            decodeElement(titleDecoder, titleText, 50); // Title decodes at 50ms per character
+            setTimeout(() => decodeElement(textDecoder, textText, 50), 1000); // Text starts 1s later
         };
     </script>
 </body>
