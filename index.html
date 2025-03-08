@@ -8,34 +8,36 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
             background-color: #f5f5f7;
             color: #1d1d1f;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         .container {
             text-align: center;
-            padding: 40px;
-            perspective: 1000px; /* Enables 3D space */
+            padding: 20px;
+            perspective: 1000px;
+            max-width: 90%; /* Prevents overflow on small screens */
         }
         h1 {
-            font-size: 56px;
+            font-size: clamp(32px, 10vw, 56px); /* Scales between 32px and 56px */
             font-weight: 600;
             margin-bottom: 16px;
             letter-spacing: -0.02em;
             transform-style: preserve-3d;
             transition: transform 0.3s ease;
+            word-wrap: break-word; /* Ensures long words break */
         }
         h1:hover {
             transform: rotateX(20deg) rotateY(20deg) translateZ(50px);
             color: #0071e3;
         }
         p {
-            font-size: 24px;
+            font-size: clamp(16px, 5vw, 24px); /* Scales between 16px and 24px */
             font-weight: 400;
             color: #6e6e73;
             max-width: 600px;
@@ -48,7 +50,7 @@
         }
         .dot {
             color: #0071e3;
-            font-size: 28px;
+            font-size: clamp(18px, 5vw, 28px);
         }
 
         /* Typing Animation */
@@ -59,6 +61,21 @@
         }
         @keyframes blink {
             50% { border-color: transparent; }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                margin-bottom: 12px;
+            }
+            p {
+                white-space: normal; /* Allows text to wrap on small screens */
+                animation: none; /* Disables typing animation for readability */
+                border-right: none; /* Removes cursor on mobile */
+            }
         }
     </style>
 </head>
