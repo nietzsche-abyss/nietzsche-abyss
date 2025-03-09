@@ -53,16 +53,15 @@
       text-decoration: none;
       font-size: 16px;
       color: #0071e3;
-      transition: color 0.3s, border-bottom 0.3s;
-      padding-bottom: 2px;
-    }
-    /* Highlight for active nav link */
-    .nav-list li a.active {
-      color: #005bb5;
-      border-bottom: 2px solid #0071e3;
+      transition: color 0.3s, font-size 0.3s;
     }
     .nav-list li a:hover {
       color: #005bb5;
+    }
+    /* Active Nav Link */
+    .nav-list li a.active {
+      color: black;
+      font-size: 18px;
     }
     /* Blog Listing Styles */
     .blog-list {
@@ -166,12 +165,6 @@
       }, speed);
     }
 
-    // Helper to update active nav link
-    function setActiveNav(navId) {
-      document.querySelectorAll('.nav-list li a').forEach(a => a.classList.remove('active'));
-      document.getElementById(navId).classList.add('active');
-    }
-
     // Global list of blogs
     const blogs = [
       { title: "First Blog", file: "blogs/2024-03-07_blog1.md" },
@@ -194,6 +187,17 @@
     const blogContentEl = document.getElementById('blog-content');
     const titleEl = document.getElementById('title');
     const aboutContentEl = document.getElementById('about-content');
+
+    // Update active navigation link
+    function updateActiveNav(activeId) {
+      document.querySelectorAll('.nav-list li a').forEach(link => {
+        if (link.id === activeId) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
 
     // Section management
     function showSection(sectionId) {
@@ -247,13 +251,13 @@
             history.pushState(null, '', '/');
             blogContentEl.innerHTML = '';
             renderBlogList();
-            setActiveNav('nav-home');
+            updateActiveNav('nav-home');
           };
           blogContentEl.prepend(back);
 
-          // Update URL with blog query parameter and set nav highlight
+          // Update URL with blog query parameter
           history.pushState({ blog: file }, '', '?blog=' + encodeURIComponent(file));
-          setActiveNav('nav-home');
+          updateActiveNav('nav-home');
         })
         .catch(err => {
           blogContentEl.innerHTML = "<p>Error loading blog.</p>";
@@ -276,22 +280,22 @@
     document.getElementById('nav-home').addEventListener('click', function(e) {
       e.preventDefault();
       history.pushState(null, '', '/');
-      setActiveNav('nav-home');
       showSection('blog-section');
       renderBlogList();
+      updateActiveNav('nav-home');
     });
     document.getElementById('nav-about').addEventListener('click', function(e) {
       e.preventDefault();
       history.pushState({ page: 'about' }, '', '?page=about');
-      setActiveNav('nav-about');
       showSection('about-section');
       loadAbout();
+      updateActiveNav('nav-about');
     });
     document.getElementById('nav-contact').addEventListener('click', function(e) {
       e.preventDefault();
       history.pushState({ page: 'contact' }, '', '?page=contact');
-      setActiveNav('nav-contact');
       showSection('contact-section');
+      updateActiveNav('nav-contact');
     });
 
     // On initial load, decode the title and decide which section to display
@@ -302,31 +306,31 @@
       if (params.has('page')) {
         const page = params.get('page');
         if (page === 'about') {
-          setActiveNav('nav-about');
           showSection('about-section');
           loadAbout();
+          updateActiveNav('nav-about');
         } else if (page === 'contact') {
-          setActiveNav('nav-contact');
           showSection('contact-section');
+          updateActiveNav('nav-contact');
         } else {
-          setActiveNav('nav-home');
           showSection('blog-section');
+          updateActiveNav('nav-home');
         }
       } else if (params.has('blog')) {
         const blogFile = params.get('blog');
         const blog = blogs.find(b => b.file === blogFile);
         if (blog) {
-          setActiveNav('nav-home');
           showSection('blog-section');
           loadBlog(blog.file, blog.title);
+          updateActiveNav('nav-home');
         } else {
-          setActiveNav('nav-home');
           showSection('blog-section');
           renderBlogList();
+          updateActiveNav('nav-home');
         }
       } else {
-        setActiveNav('nav-home');
         showSection('blog-section');
+        updateActiveNav('nav-home');
       }
     };
 
@@ -336,33 +340,33 @@
       if (params.has('page')) {
         const page = params.get('page');
         if (page === 'about') {
-          setActiveNav('nav-about');
           showSection('about-section');
           loadAbout();
+          updateActiveNav('nav-about');
         } else if (page === 'contact') {
-          setActiveNav('nav-contact');
           showSection('contact-section');
+          updateActiveNav('nav-contact');
         } else {
-          setActiveNav('nav-home');
           showSection('blog-section');
           renderBlogList();
+          updateActiveNav('nav-home');
         }
       } else if (params.has('blog')) {
         const blogFile = params.get('blog');
         const blog = blogs.find(b => b.file === blogFile);
         if (blog) {
-          setActiveNav('nav-home');
           showSection('blog-section');
           loadBlog(blog.file, blog.title);
+          updateActiveNav('nav-home');
         } else {
-          setActiveNav('nav-home');
           showSection('blog-section');
           renderBlogList();
+          updateActiveNav('nav-home');
         }
       } else {
-        setActiveNav('nav-home');
         showSection('blog-section');
         renderBlogList();
+        updateActiveNav('nav-home');
       }
     };
   </script>
