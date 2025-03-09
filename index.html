@@ -24,7 +24,7 @@
       font-size: clamp(32px, 8vw, 56px);
       font-weight: 600;
       letter-spacing: -0.02em;
-      cursor: default;
+      cursor: default; /* We'll keep default or pointer if needed. */
       transition: transform 0.3s;
     }
     h1:hover {
@@ -73,9 +73,8 @@
 </head>
 <body>
 <div class="container">
-  <h1>
-    <a href="#" id="titleEl">Nietzsche Virus Lab</a>
-  </h1>
+  <!-- We'll keep the H1 style as is, but make it clickable in the script below -->
+  <h1 id="title">Nietzsche Virus Lab</h1>
   <ul id="blog-list" class="blog-list"></ul>
   <div id="blog-content"></div>
 </div>
@@ -106,7 +105,7 @@
 
   const blogListEl = document.getElementById('blog-list');
   const blogContentEl = document.getElementById('blog-content');
-  const titleLink = document.getElementById('titleEl');
+  const titleEl = document.getElementById('title');
 
   /**
    * Decodes an element's text by revealing the actual text character-by-character,
@@ -146,7 +145,6 @@
       textNodes.push(walker.currentNode);
     }
 
-    // For each text node, apply a decoding animation.
     textNodes.forEach((node) => {
       const finalText = node.nodeValue;
       node.nodeValue = '';
@@ -262,7 +260,7 @@
 
   // Check if we have a blog slug in the URL hash (#blog=SLUG) and load that blog automatically.
   function checkHashForBlog(){
-    const hash = window.location.hash; // e.g. "#blog=2024-03-07_blog1"
+    const hash = window.location.hash;
     if (hash.startsWith("#blog=")) {
       const slug = hash.substring(6);
       loadBlogBySlug(slug);
@@ -271,16 +269,17 @@
     }
   }
 
-  // Make the title clickable, linking to 'home' (blog list)
-  titleLink.onclick = (e) => {
-    e.preventDefault();
-    window.location.hash = "";
-    renderBlogList();
-  };
-
+  // Decode main title, then check if a slug was provided
   window.onload = () => {
-    // Decode the clickable title
-    decodeElement(titleLink, titleLink.textContent, 50);
+    decodeElement(titleEl, titleEl.textContent, 50);
+    // Make the title clickable without looking like a link
+    titleEl.onclick = () => {
+      // Return to Home
+      window.location.hash = "";
+      blogContentEl.innerHTML = '';
+      blogListEl.style.display = 'block';
+    };
+
     checkHashForBlog();
   };
 
@@ -294,7 +293,7 @@
   // 5) If user clicks the back link, the hash is cleared and the blog list reappears.
   // Additional Test Case:
   // 6) The blog content is decoded once it is loaded.
-  // 7) The title is clickable and returns to the blog list.
+  // 7) Clicking the title resets hash and shows the blog list without link styling.
 </script>
 </body>
 </html>
