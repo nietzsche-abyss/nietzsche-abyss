@@ -19,43 +19,18 @@
       margin: 0;
     }
 
-    .container {
+    header {
       width: 100%;
       max-width: 700px;
+      margin-bottom: 20px;
     }
 
-    /* Title at the top */
-    h1 {
-      font-size: clamp(32px, 8vw, 56px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      cursor: pointer;
-      margin: 0 0 20px 0; /* add spacing below h1 */
-      transition: none;
-      text-align: center;
-    }
-
-    /* Remove color change or rotation on hover completely */
-    h1:hover {
-      transform: none;
-      color: inherit;
-    }
-
-    /* Ensure no color change or transform on click (active/focus) */
-    h1:active, h1:focus {
-      color: inherit;
-      transform: none;
-    }
-
-    /* Navigation below the title */
     .top-nav {
       display: flex;
       gap: 20px;
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
     }
 
     .top-nav a {
@@ -70,10 +45,38 @@
       text-decoration: underline;
     }
 
+    /* Active nav styling: black color, slightly bigger font */
     .top-nav a.active {
       color: #000;
       font-size: 20px;
       text-decoration: none; /* remove underline if hovered */
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    /* Make title clickable without link-like styling, no rotation on hover */
+    h1 {
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      margin: 0;
+      transition: none;
+    }
+
+    /* Remove color change or rotation on hover completely */
+    h1:hover {
+      transform: none;
+      color: inherit;
+    }
+
+    /* Ensure no color change or transform on click (active/focus) */
+    h1:active, h1:focus {
+      color: inherit;
+      transform: none;
     }
 
     .blog-list {
@@ -131,16 +134,16 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 id="title">Nietzsche Virus Lab</h1>
-
-    <!-- Navigation moved below the h1 -->
+  <header>
     <nav class="top-nav">
       <a href="#" id="nav-home">Home</a>
       <a href="#about" id="nav-about">About</a>
       <a href="#contact" id="nav-contact">Contact</a>
     </nav>
+  </header>
 
+  <div class="container">
+    <h1 id="title">Nietzsche Virus Lab</h1>
     <ul id="blog-list" class="blog-list"></ul>
     <div id="blog-content"></div>
   </div>
@@ -353,6 +356,26 @@
     }
   }
 
+  // Basic routing for About and Contact
+  function checkHashForBlog(){
+    highlightActiveNav();
+    const hash = window.location.hash;
+
+    if (hash === '#about') {
+      showAboutPage();
+      return;
+    } else if (hash === '#contact') {
+      showContactPage();
+      return;
+    } else if (hash.startsWith('#blog=')) {
+      const slug = hash.substring(6);
+      loadBlogBySlug(slug);
+    } else {
+      // default => render blog list
+      renderBlogList();
+    }
+  }
+
   function showAboutPage() {
     blogListEl.style.display = 'none';
     blogContentEl.innerHTML = `
@@ -377,25 +400,6 @@
     backLink.onclick = () => {
       window.location.hash = '';
     };
-  }
-
-  function checkHashForBlog(){
-    highlightActiveNav();
-    const hash = window.location.hash;
-
-    if (hash === '#about') {
-      showAboutPage();
-      return;
-    } else if (hash === '#contact') {
-      showContactPage();
-      return;
-    } else if (hash.startsWith('#blog=')) {
-      const slug = hash.substring(6);
-      loadBlogBySlug(slug);
-    } else {
-      // default => render blog list
-      renderBlogList();
-    }
   }
 
   // Decode main title, then check if a slug was provided
@@ -427,7 +431,19 @@
     checkHashForBlog();
   };
 
-  window.addEventListener("hashchange", 
+  window.addEventListener("hashchange", checkHashForBlog);
+
+  // Existing Test Cases:
+  // 1) Ensure decodeElement is applied to the main title and each blog listing.
+  // 2) Check that when a blog item is clicked, the correct markdown is loaded.
+  // 3) Check the back arrow returns to the listings.
+  // 4) If user visits #blog=<slug> directly, it should load that blog's content right away.
+  // 5) If user clicks the back link, the hash is cleared and the blog list reappears.
+  // Additional Test Case:
+  // 6) The blog content is decoded once it is loaded.
+  // 7) Clicking the title resets hash and shows the blog list.
+  // 8) #about and #contact show simple placeholders with a back link.
+  // 9) Active nav link is black and bigger.
 </script>
 </body>
 </html>
