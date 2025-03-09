@@ -80,7 +80,6 @@
 
 <script>
   // Global list of blogs with a unique 'slug'
-  // (the slug can match the file name or any unique ID).
   const blogs = [
     {
       title: "First Blog",
@@ -99,7 +98,7 @@
       file: "blogs/2023-06-20_blog3.md",
       slug: "2023-06-20_blog3",
       url: "https://yourdomain.com/#blog=2023-06-20_blog3"
-    },
+    }
     // Add more sample blogs here
   ];
 
@@ -121,16 +120,49 @@
     const interval = setInterval(() => {
       el.textContent = finalText
         .split('')
-        .map((char, idx) => idx < iterations
+        .map((char, idx) => (idx < iterations)
           ? char
-          : chars[Math.floor(Math.random() * chars.length)]
-        )
+          : chars[Math.floor(Math.random() * chars.length)])
         .join('');
       iterations++;
       if (iterations > finalText.length) {
         clearInterval(interval);
       }
     }, speed);
+  }
+
+  /**
+   * Decodes all text nodes within a container, preserving HTML structure.
+   * @param {HTMLElement} container - The container whose text nodes we want to decode.
+   * @param {number} speed - The interval speed in ms for each decoding.
+   */
+  function decodeBlogContent(container, speed) {
+    // We walk the DOM and decode each text node individually.
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode);
+    }
+
+    // For each text node, apply a decoding animation.
+    textNodes.forEach((node) => {
+      const finalText = node.nodeValue;
+      node.nodeValue = '';
+      let iterations = 0;
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      const interval = setInterval(() => {
+        node.nodeValue = finalText
+          .split('')
+          .map((char, idx) => (idx < iterations)
+            ? char
+            : chars[Math.floor(Math.random() * chars.length)])
+          .join('');
+        iterations++;
+        if (iterations > finalText.length) {
+          clearInterval(interval);
+        }
+      }, speed);
+    });
   }
 
   // Extract date from filename
@@ -145,9 +177,6 @@
     return getDate(b.file).localeCompare(getDate(a.file));
   });
 
-  /**
-   * Renders the blog list with decode animation on titles
-   */
   function renderBlogList(){
     blogContentEl.innerHTML = '';
     blogListEl.innerHTML = '';
@@ -158,13 +187,12 @@
       li.className = 'blog-item';
 
       const a = document.createElement('a');
-      a.href = "#blog=" + blog.slug; // link with the blog slug hash
-      a.textContent = '';           // we'll decode the text
+      a.href = "#blog=" + blog.slug;
+      a.textContent = '';
       decodeElement(a, blog.title, 30);
 
       a.onclick = (e) => {
         e.preventDefault();
-        // Update hash so user can copy/paste the link for this blog
         window.location.hash = "blog=" + blog.slug;
         loadBlogBySlug(blog.slug);
       };
@@ -179,11 +207,7 @@
     });
   }
 
-  /**
-   * Loads a blog post by its slug
-   */
   function loadBlogBySlug(slug) {
-    // Find the matching blog in the array
     const blog = blogs.find(b => b.slug === slug);
     if (!blog) {
       blogContentEl.innerHTML = "<p>Blog not found.</p>";
@@ -192,9 +216,6 @@
     loadBlog(blog.file, blog.url);
   }
 
-  /**
-   * Loads a blog by its file, then appends share buttons
-   */
   function loadBlog(file, blogUrl){
     blogListEl.style.display='none';
 
@@ -206,12 +227,10 @@
         // Add a 'back' link
         const back = document.createElement('div');
         back.className='back-link';
-        back.textContent='← Back';
+        back.textContent='\u2190 Back';
         back.onclick = () => {
-          // Clear current content and show list
           blogContentEl.innerHTML='';
           blogListEl.style.display='block';
-          // Also clear the hash
           window.location.hash = "";
         };
         blogContentEl.prepend(back);
@@ -220,11 +239,8 @@
         const shareButtons = document.createElement('div');
         shareButtons.className = 'share-buttons';
 
-        // Link to X (Twitter)
         const twitterLink = `https://twitter.com/intent/tweet?url=${encodeURIComponent(blogUrl)}`;
-        // Link to Facebook
         const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(blogUrl)}`;
-        // Link to LinkedIn
         const linkedInLink = `https://linkedin.com/shareArticle?url=${encodeURIComponent(blogUrl)}`;
 
         shareButtons.innerHTML = `
@@ -233,45 +249,41 @@
           <a href="${linkedInLink}" target="_blank">Share on LinkedIn</a>
         `;
         blogContentEl.appendChild(shareButtons);
+
+        // Decode all blog content after we have appended everything
+        decodeBlogContent(blogContentEl, 10);
       })
       .catch(() => {
         blogContentEl.innerHTML="<p>Error loading blog.</p>";
       });
   }
 
-  /**
-   * Checks if we have a blog slug in the URL hash (#blog=SLUG)
-   * and loads that blog automatically.
-   */
+  // Check if we have a blog slug in the URL hash (#blog=SLUG) and load that blog automatically.
   function checkHashForBlog(){
-    // e.g. if url is https://yourdomain.com/#blog=2024-03-07_blog1
-    const hash = window.location.hash; // "#blog=2024-03-07_blog1"
+    const hash = window.location.hash; // e.g. "#blog=2024-03-07_blog1"
     if (hash.startsWith("#blog=")) {
-      const slug = hash.substring(6); // "2024-03-07_blog1"
+      const slug = hash.substring(6);
       loadBlogBySlug(slug);
     } else {
-      // If no hash, just show the list
       renderBlogList();
     }
   }
 
-  // On window load, decode the main title and either load a blog by hash or show the list
   window.onload = () => {
     decodeElement(titleEl, titleEl.textContent, 50);
     checkHashForBlog();
   };
 
-  // If the hash changes while the page is open, re-check
   window.addEventListener("hashchange", checkHashForBlog);
 
   // Existing Test Cases:
   // 1) Ensure decodeElement is applied to the main title and each blog listing.
   // 2) Check that when a blog item is clicked, the correct markdown is loaded.
   // 3) Check the back arrow returns to the listings.
-  //
-  // Additional Test Cases (added for direct-linking):
   // 4) If user visits #blog=<slug> directly, it should load that blog's content right away.
   // 5) If user clicks the back link, the hash is cleared and the blog list reappears.
+  // Additional Test Case:
+  // 6) The blog content is decoded once it is loaded.
 </script>
 </body>
 </html>
