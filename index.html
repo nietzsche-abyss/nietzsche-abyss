@@ -85,19 +85,19 @@
       title: "First Blog",
       file: "blogs/2024-03-07_blog1.md",
       slug: "2024-03-07_blog1",
-      url: "https://yourdomain.com/#blog=2024-03-07_blog1" // For manual sharing if desired
+      url: "https://nietzsche.blog/#blog=2024-03-07_blog1" // For manual sharing if desired
     },
     {
       title: "Second Blog",
       file: "blogs/2023-11-14_blog2.md",
       slug: "2023-11-14_blog2",
-      url: "https://yourdomain.com/#blog=2023-11-14_blog2"
+      url: "https://nietzsche.blog/#blog=2023-11-14_blog2"
     },
     {
       title: "Third Blog",
       file: "blogs/2023-06-20_blog3.md",
       slug: "2023-06-20_blog3",
-      url: "https://yourdomain.com/#blog=2023-06-20_blog3"
+      url: "https://nietzsche.blog/#blog=2023-06-20_blog3"
     }
     // Add more sample blogs here
   ];
@@ -251,7 +251,7 @@
         blogContentEl.appendChild(shareButtons);
 
         // Decode all blog content after we have appended everything
-        decodeBlogContent(blogContentEl, 30);
+        decodeBlogContent(blogContentEl, 10);
       })
       .catch(() => {
         blogContentEl.innerHTML="<p>Error loading blog.</p>";
