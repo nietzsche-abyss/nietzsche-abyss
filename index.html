@@ -20,17 +20,29 @@
       width: 100%;
       max-width: 700px;
     }
+    /* Make title clickable without link-like styling */
     h1 {
       font-size: clamp(32px, 8vw, 56px);
       font-weight: 600;
       letter-spacing: -0.02em;
-      cursor: default; /* We'll keep default or pointer if needed. */
+      cursor: pointer; /* Updated from 'default' to 'pointer' if you want a clickable feel */
       transition: transform 0.3s;
+      margin: 0;
     }
+    /* Remove color change on hover; optionally keep or remove transform if you want no rotation. */
     h1:hover {
+      /* You can keep or remove the rotation below; user requests no noticeable click changes.
+         If you want no rotation on hover at all, just comment out or remove the transform line.
+      */
       transform: rotateX(15deg) rotateY(10deg);
-      color: #0071e3;
+      /* color: #0071e3;  Remove or comment out to avoid color changes on hover */
     }
+    /* Ensure no color change or transform on click (active/focus) */
+    h1:active, h1:focus {
+      color: inherit;
+      transform: none;
+    }
+
     .blog-list {
       list-style: none;
       padding: 0;
@@ -73,7 +85,6 @@
 </head>
 <body>
 <div class="container">
-  <!-- We'll keep the H1 style as is, but make it clickable in the script below -->
   <h1 id="title">Nietzsche Virus Lab</h1>
   <ul id="blog-list" class="blog-list"></ul>
   <div id="blog-content"></div>
@@ -272,9 +283,9 @@
   // Decode main title, then check if a slug was provided
   window.onload = () => {
     decodeElement(titleEl, titleEl.textContent, 50);
-    // Make the title clickable without looking like a link
+    // Title goes Home when clicked
     titleEl.onclick = () => {
-      // Return to Home
+      // Reset hash and content to show the blog list
       window.location.hash = "";
       blogContentEl.innerHTML = '';
       blogListEl.style.display = 'block';
@@ -293,7 +304,7 @@
   // 5) If user clicks the back link, the hash is cleared and the blog list reappears.
   // Additional Test Case:
   // 6) The blog content is decoded once it is loaded.
-  // 7) Clicking the title resets hash and shows the blog list without link styling.
+  // 7) Clicking the title resets hash and shows the blog list.
 </script>
 </body>
 </html>
