@@ -1,34 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nietzsche Virus Lab</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    /* Base Styles */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
       background: #f5f5f7;
       color: #1d1d1f;
-      display: flex;
-      justify-content: center;
+      margin: 0;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .container {
       width: 100%;
       max-width: 700px;
     }
-    h1 {
+    header, footer {
+      width: 100%;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    /* Title & Navigation */
+    #title {
       font-size: clamp(32px, 8vw, 56px);
       font-weight: 600;
       letter-spacing: -0.02em;
       cursor: default;
-      transition: transform 0.3s;
+      transition: transform 0.3s, color 0.3s;
+      margin: 0;
     }
-    h1:hover {
+    #title:hover {
       transform: rotateX(15deg) rotateY(10deg);
       color: #0071e3;
     }
+    nav {
+      margin-top: 10px;
+    }
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+    }
+    .nav-list li a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #0071e3;
+      transition: color 0.3s;
+    }
+    .nav-list li a:hover {
+      color: #005bb5;
+    }
+    /* Blog Listing Styles */
     .blog-list {
       list-style: none;
       padding: 0;
@@ -45,11 +75,13 @@
       font-size: 20px;
       text-decoration: none;
       color: #0071e3;
+      cursor: pointer;
     }
     .date {
       color: #999;
       font-size: 14px;
     }
+    /* Blog Content & Back Link */
     #blog-content {
       margin-top: 30px;
       line-height: 1.6;
@@ -59,122 +91,251 @@
       color: #0071e3;
       margin-bottom: 15px;
     }
-    .share-buttons {
-      margin-top: 20px;
+    /* Section Visibility */
+    section {
+      display: none;
     }
-    .share-buttons a {
-      text-decoration: none;
-      margin-right: 10px;
-      color: #0071e3;
+    section.active {
+      display: block;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1 id="title">Nietzsche Virus Lab</h1>
-  <ul id="blog-list" class="blog-list"></ul>
-  <div id="blog-content"></div>
-</div>
+  <header class="container">
+    <h1 id="title">Nietzsche Virus Lab</h1>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="#" id="nav-home">Home</a></li>
+        <li><a href="#" id="nav-about">About</a></li>
+        <li><a href="#" id="nav-contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<script>
-  const blogs = [
-    {title: "First Blog", file: "blogs/2024-03-07_blog1.md", url: "https://yourdomain.com/blogs/2024-03-07_blog1"},
-    {title: "Second Blog", file: "blogs/2023-11-14_blog2.md", url: "https://yourdomain.com/blogs/2023-11-14_blog2"},
-    {title: "Third Blog", file: "blogs/2023-06-20_blog3.md", url: "https://yourdomain.com/blogs/2023-06-20_blog3"},
-  ];
+  <main class="container">
+    <!-- Blog Section -->
+    <section id="blog-section" class="active">
+      <ul id="blog-list" class="blog-list"></ul>
+      <div id="blog-content"></div>
+    </section>
+    <!-- About Section -->
+    <section id="about-section">
+      <div id="about-content"></div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact-section">
+      <div id="contact-content">
+        <h2>Contact Us</h2>
+        <p>
+          Please reach out at 
+          <a href="mailto:contact@nietzscheviruslab.com">contact@nietzscheviruslab.com</a>
+        </p>
+      </div>
+    </section>
+  </main>
 
-  const blogListEl = document.getElementById('blog-list');
-  const blogContentEl = document.getElementById('blog-content');
-  const titleEl = document.getElementById('title');
+  <footer class="container">
+    <p>&copy; 2025 Nietzsche Virus Lab</p>
+  </footer>
 
-  function decodeElement(el, finalText, speed) {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    let iterations = 0;
-    const interval = setInterval(() => {
-      el.textContent = finalText.split('').map((char, idx) => {
-        return idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)];
-      }).join('');
-      iterations++;
-      if (iterations > finalText.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-  }
+  <script>
+    // Decode text effect
+    function decodeElement(el, finalText, speed) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      let iterations = 0;
+      const interval = setInterval(() => {
+        el.textContent = finalText.split('').map((char, idx) => {
+          return idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        iterations++;
+        if (iterations > finalText.length) {
+          clearInterval(interval);
+        }
+      }, speed);
+    }
 
-  function getDate(file){
-    const match = file.match(/\d{4}-\d{2}-\d{2}/);
-    if (!match) return "Unknown";
-    return match[0];
-  }
+    // Global list of blogs
+    const blogs = [
+      { title: "First Blog", file: "blogs/2024-03-07_blog1.md" },
+      { title: "Second Blog", file: "blogs/2023-11-14_blog2.md" },
+      { title: "Third Blog", file: "blogs/2023-06-20_blog3.md" },
+      // Add more sample blogs here
+    ];
 
-  blogs.sort((a,b) => {
-    return getDate(b.file).localeCompare(getDate(a.file));
-  });
+    // Utility: Extract date from filename
+    function getDate(file) {
+      const match = file.match(/\d{4}-\d{2}-\d{2}/);
+      return match ? match[0] : "Unknown";
+    }
 
-  function renderBlogList(){
-    blogContentEl.innerHTML = '';
-    blogListEl.innerHTML = '';
-    blogListEl.style.display = 'block';
+    // Sort blogs by date descending
+    blogs.sort((a, b) => getDate(b.file).localeCompare(getDate(a.file)));
 
-    blogs.forEach(blog => {
-      const li = document.createElement('li');
-      li.className = 'blog-item';
+    // DOM Elements
+    const blogListEl = document.getElementById('blog-list');
+    const blogContentEl = document.getElementById('blog-content');
+    const titleEl = document.getElementById('title');
+    const aboutContentEl = document.getElementById('about-content');
 
-      const a = document.createElement('a');
-      a.href = '#';
-      a.textContent = '';
-      decodeElement(a, blog.title, 30);
-
-      a.onclick = (e) => {
-        e.preventDefault();
-        loadBlog(blog.file, blog.url);
-      };
-
-      const dateSpan = document.createElement('span');
-      dateSpan.className = 'date';
-      dateSpan.textContent = getDate(blog.file);
-
-      li.appendChild(a);
-      li.appendChild(dateSpan);
-      blogListEl.appendChild(li);
-    });
-  }
-
-  function loadBlog(file, blogUrl){
-    fetch(file)
-      .then(res => res.ok ? res.text() : Promise.reject("Blog not found"))
-      .then(md => {
-        blogListEl.style.display='none';
-        blogContentEl.innerHTML = marked.parse(md);
-
-        const back = document.createElement('div');
-        back.className='back-link';
-        back.textContent='← Back';
-        back.onclick = () => {
-          blogContentEl.innerHTML='';
-          blogListEl.style.display='block';
-        };
-        blogContentEl.prepend(back);
-
-        // Add social media share buttons
-        const shareButtons = document.createElement('div');
-        shareButtons.className = 'share-buttons';
-        shareButtons.innerHTML = `
-          <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(blogUrl)}" target="_blank">Share on X</a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(blogUrl)}" target="_blank">Share on Facebook</a>
-          <a href="https://linkedin.com/shareArticle?url=${encodeURIComponent(blogUrl)}" target="_blank">Share on LinkedIn</a>
-        `;
-        blogContentEl.appendChild(shareButtons);
-      })
-      .catch(err => {
-        blogContentEl.innerHTML="<p>Error loading blog.</p>";
+    // Section management
+    function showSection(sectionId) {
+      document.querySelectorAll('main > section').forEach(sec => {
+        sec.classList.remove('active');
       });
-  }
+      document.getElementById(sectionId).classList.add('active');
+    }
 
-  window.onload = () => {
-    decodeElement(titleEl, titleEl.textContent, 50);
-    renderBlogList();
-  };
-</script>
+    // Render blog list with decoding effect for titles
+    function renderBlogList() {
+      blogContentEl.innerHTML = '';
+      blogListEl.innerHTML = '';
+      blogListEl.style.display = 'block';
+      blogs.forEach(blog => {
+        const li = document.createElement('li');
+        li.className = 'blog-item';
+
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = '';
+        decodeElement(a, blog.title, 30);
+
+        a.onclick = (e) => {
+          e.preventDefault();
+          loadBlog(blog.file, blog.title);
+        };
+
+        const dateSpan = document.createElement('span');
+        dateSpan.className = 'date';
+        dateSpan.textContent = getDate(blog.file);
+
+        li.appendChild(a);
+        li.appendChild(dateSpan);
+        blogListEl.appendChild(li);
+      });
+    }
+
+    // Load a blog post and update history state
+    function loadBlog(file, blogTitle) {
+      fetch(file)
+        .then(res => res.ok ? res.text() : Promise.reject("Blog not found"))
+        .then(md => {
+          blogListEl.style.display = 'none';
+          blogContentEl.innerHTML = marked.parse(md);
+
+          const back = document.createElement('div');
+          back.className = 'back-link';
+          back.textContent = '← Back';
+          back.onclick = () => {
+            history.pushState(null, '', '/');
+            blogContentEl.innerHTML = '';
+            renderBlogList();
+          };
+          blogContentEl.prepend(back);
+
+          // Update URL with blog query parameter
+          history.pushState({ blog: file }, '', '?blog=' + encodeURIComponent(file));
+        })
+        .catch(err => {
+          blogContentEl.innerHTML = "<p>Error loading blog.</p>";
+        });
+    }
+
+    // Load About page content from external markdown
+    function loadAbout() {
+      fetch('about.md')
+        .then(res => res.ok ? res.text() : Promise.reject("About not found"))
+        .then(md => {
+          aboutContentEl.innerHTML = marked.parse(md);
+        })
+        .catch(err => {
+          aboutContentEl.innerHTML = "<p>Error loading About content.</p>";
+        });
+    }
+
+    // Navigation event listeners
+    document.getElementById('nav-home').addEventListener('click', function(e) {
+      e.preventDefault();
+      history.pushState(null, '', '/');
+      showSection('blog-section');
+      renderBlogList();
+    });
+    document.getElementById('nav-about').addEventListener('click', function(e) {
+      e.preventDefault();
+      history.pushState({ page: 'about' }, '', '?page=about');
+      showSection('about-section');
+      loadAbout();
+    });
+    document.getElementById('nav-contact').addEventListener('click', function(e) {
+      e.preventDefault();
+      history.pushState({ page: 'contact' }, '', '?page=contact');
+      showSection('contact-section');
+    });
+
+    // On initial load, decode the title and decide which section to display
+    window.onload = () => {
+      decodeElement(titleEl, titleEl.textContent, 50);
+      renderBlogList();
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('page')) {
+        const page = params.get('page');
+        if (page === 'about') {
+          showSection('about-section');
+          loadAbout();
+        } else if (page === 'contact') {
+          showSection('contact-section');
+        } else {
+          showSection('blog-section');
+        }
+      } else if (params.has('blog')) {
+        const blogFile = params.get('blog');
+        const blog = blogs.find(b => b.file === blogFile);
+        if (blog) {
+          showSection('blog-section');
+          loadBlog(blog.file, blog.title);
+        } else {
+          showSection('blog-section');
+          renderBlogList();
+        }
+      } else {
+        showSection('blog-section');
+      }
+    };
+
+    // Listen for browser navigation (back/forward)
+    window.onpopstate = () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('page')) {
+        const page = params.get('page');
+        if (page === 'about') {
+          showSection('about-section');
+          loadAbout();
+        } else if (page === 'contact') {
+          showSection('contact-section');
+        } else {
+          showSection('blog-section');
+          renderBlogList();
+        }
+      } else if (params.has('blog')) {
+        const blogFile = params.get('blog');
+        const blog = blogs.find(b => b.file === blogFile);
+        if (blog) {
+          showSection('blog-section');
+          loadBlog(blog.file, blog.title);
+        } else {
+          showSection('blog-section');
+          renderBlogList();
+        }
+      } else {
+        showSection('blog-section');
+        renderBlogList();
+      }
+    };
+  </script>
 </body>
 </html>
