@@ -20,23 +20,24 @@
       width: 100%;
       max-width: 700px;
     }
-    /* Make title clickable without link-like styling */
+    /* Make title clickable without link-like styling, no rotation on hover */
     h1 {
       font-size: clamp(32px, 8vw, 56px);
       font-weight: 600;
       letter-spacing: -0.02em;
-      cursor: pointer; /* Updated from 'default' to 'pointer' if you want a clickable feel */
-      transition: transform 0.3s;
+      cursor: pointer;
       margin: 0;
+      /* Removed transform transitions to avoid rotation. */
+      transition: none;
     }
-    /* Remove color change on hover; optionally keep or remove transform if you want no rotation. */
+    
+    /* Remove color change or rotation on hover completely */
     h1:hover {
-      /* You can keep or remove the rotation below; user requests no noticeable click changes.
-         If you want no rotation on hover at all, just comment out or remove the transform line.
-      */
-      transform: rotateX(15deg) rotateY(10deg);
-      /* color: #0071e3;  Remove or comment out to avoid color changes on hover */
+      /* No transform, no color change */
+      transform: none;
+      color: inherit;
     }
+
     /* Ensure no color change or transform on click (active/focus) */
     h1:active, h1:focus {
       color: inherit;
