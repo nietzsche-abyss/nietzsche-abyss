@@ -427,19 +427,7 @@
     checkHashForBlog();
   };
 
-  window.addEventListener("hashchange", checkHashForBlog);
-
-  // Existing Test Cases:
-  // 1) Ensure decodeElement is applied to the main title and each blog listing.
-  // 2) Check that when a blog item is clicked, the correct markdown is loaded.
-  // 3) Check the back arrow returns to the listings.
-  // 4) If user visits #blog=<slug> directly, it should load that blog's content right away.
-  // 5) If user clicks the back link, the hash is cleared and the blog list reappears.
-  // Additional Test Case:
-  // 6) The blog content is decoded once it is loaded.
-  // 7) Clicking the title resets hash and shows the blog list.
-  // 8) #about and #contact show simple placeholders with a back link.
-  // 9) Active nav link is black and bigger.
+  window.addEventListener("hashchange", 
 </script>
 </body>
 </html>
