@@ -69,6 +69,7 @@
 </div>
 
 <script>
+  // Global list of blogs
   const blogs = [
     {title: "First Blog", file: "blogs/2024-03-07_blog1.md"},
     {title: "Second Blog", file: "blogs/2023-11-14_blog2.md"},
@@ -80,20 +81,27 @@
   const blogContentEl = document.getElementById('blog-content');
   const titleEl = document.getElementById('title');
 
-  // Decode animation (working version)
+  /**
+   * Decodes an element's text by revealing the actual text character-by-character,
+   * replacing the rest with random characters.
+   *
+   * @param {HTMLElement} el - The element whose text we want to decode.
+   * @param {string} finalText - The final text to display.
+   * @param {number} speed - The interval speed in ms for each decoding iteration.
+   */
   function decodeElement(el, finalText, speed) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
     let iterations = 0;
     const interval = setInterval(() => {
-      el.textContent = finalText.split('')
-        .map((char, idx) => idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)])
-        .join('');
+      el.textContent = finalText.split('').map((char, idx) => {
+        return idx < iterations ? char : chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
       iterations++;
-      if(iterations > finalText.length) clearInterval(interval);
+      if (iterations > finalText.length) {
+        clearInterval(interval);
+      }
     }, speed);
   }
-
-  decodeElement(titleEl, titleEl.textContent, 50);
 
   // Extract date from filename
   function getDate(file){
@@ -107,13 +115,10 @@
     return getDate(b.file).localeCompare(getDate(a.file));
   });
 
-  const blogList = document.getElementById('blog-list');
-  const blogContent = document.getElementById('blog-content');
-
   function renderBlogList(){
-    blogContent.innerHTML = '';
-    blogList.innerHTML = '';
-    blogList.style.display = 'block';
+    blogContentEl.innerHTML = '';
+    blogListEl.innerHTML = '';
+    blogListEl.style.display = 'block';
 
     blogs.forEach(blog => {
       const li = document.createElement('li');
@@ -121,44 +126,59 @@
 
       const a = document.createElement('a');
       a.href = '#';
-      a.textContent = blog.title;
+      // We'll decode the blog title instead of simply setting textContent
+      // so the user sees the decoding animation.
+      a.textContent = '';
+      decodeElement(a, blog.title, 30);
+
       a.onclick = (e) => {
         e.preventDefault();
         loadBlog(blog.file);
       };
 
-      const date = document.createElement('span');
-      date.className = 'date';
-      date.textContent = getDate(blog.file);
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'date';
+      dateSpan.textContent = getDate(blog.file);
 
       li.appendChild(a);
-      li.appendChild(date);
-      blogList.appendChild(li);
+      li.appendChild(dateSpan);
+      blogListEl.appendChild(li);
     });
   }
 
   function loadBlog(file){
+    // Load the blog file and display it as markdown
     fetch(file)
       .then(res => res.ok ? res.text() : Promise.reject("Blog not found"))
       .then(md => {
-        blogList.style.display='none';
-        blogContent.innerHTML = marked.parse(md);
+        blogListEl.style.display='none';
+        blogContentEl.innerHTML = marked.parse(md);
+
+        // Add a 'back' link
         const back = document.createElement('div');
         back.className='back-link';
         back.textContent='← Back';
         back.onclick = () => {
-          blogContent.innerHTML='';
-          blogList.style.display='block';
+          blogContentEl.innerHTML='';
+          blogListEl.style.display='block';
         };
-        blogContent.prepend(back);
+        blogContentEl.prepend(back);
       })
-      .catch(err => blogContent.innerHTML="<p>Error loading blog.</p>");
+      .catch(err => {
+        blogContentEl.innerHTML="<p>Error loading blog.</p>";
+      });
   }
 
+  // On window load, decode the main title and render the blog list
   window.onload = () => {
     decodeElement(titleEl, titleEl.textContent, 50);
     renderBlogList();
   };
+
+  // Test Cases:
+  // 1) Ensure decodeElement is applied to the main title and each blog listing.
+  // 2) Check that when a blog item is clicked, the correct markdown is loaded.
+  // 3) Check the back arrow returns to the listings.
 </script>
 </body>
 </html>
