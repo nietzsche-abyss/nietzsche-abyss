@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nietzsche Virus Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script defer data-domain="nietzsche.blog" src="https://plausible.io/js/script.hash.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+  <style>
+    body {
+      font-family: monospace;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    header {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 0px;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #0071e3;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.2s, font-size 0.2s;
+    }
+
+    .top-nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Active nav styling: black color, slightly bigger font */
+    .top-nav a.active {
+      color: #000;
+      font-size: 20px;
+      text-decoration: none; /* remove underline if hovered */
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    /* Make title clickable without link-like styling, no rotation on hover */
+    h1 {
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      margin: 0;
+      transition: none;
+      margin-bottom: 0;
+    }
+
+    /* Remove color change or rotation on hover completely */
+    h1:hover {
+      transform: none;
+      color: inherit;
+    }
+
+    /* Ensure no color change or transform on click (active/focus) */
+    h1:active, h1:focus {
+      color: inherit;
+      transform: none;
+    }
+
+    .blog-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    .blog-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .blog-item a {
+      font-size: 20px;
+      text-decoration: none;
+      color: #0071e3;
+    }
+
+    .date {
+      display: flex;
+      align-items: center;
+      color: #999;
+      font-size: 14px;
+    }
+
+    #blog-content {
+      margin-top: 30px;
+      line-height: 1.6;
+    }
+
+    .back-link {
+      cursor: pointer;
+      color: #0071e3;
+      margin-bottom: 15px;
+    }
+
+    .share-buttons {
+      margin-top: 20px;
+    }
+
+    .share-buttons a {
+      text-decoration: none;
+      margin-right: 10px;
+      color: #0071e3;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+    p {
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- h1 appears first -->
+    <h1 id="title">Nietzsche <br>Virus Lab</h1>
+    <!-- nav links below h1 -->
+    <nav class="top-nav">
+      <a href="#" id="nav-home">Home</a>
+      <a href="#about" id="nav-about">About</a>
+      <a href="#contact" id="nav-contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <ul id="blog-list" class="blog-list"></ul>
+    <div id="blog-content"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Nietzsche Virus Lab</p>
+  </footer>
+
+<script>
+  // Global list of blogs with a unique 'slug'
+  const blogs = [
+    {
+      title: "First Blog",
+      file: "blogs/2024-03-07_blog1.md",
+      slug: "2024-03-07_blog1",
+      url: "https://yourdomain.com/#blog=2024-03-07_blog1"
+    },
+    {
+      title: "Second Blog",
+      file: "blogs/2023-11-14_blog2.md",
+      slug: "2023-11-14_blog2",
+      url: "https://yourdomain.com/#blog=2023-11-14_blog2"
+    },
+    {
+      title: "Third Blog",
+      file: "blogs/2023-06-20_blog3.md",
+      slug: "2023-06-20_blog3",
+      url: "https://yourdomain.com/#blog=2023-06-20_blog3"
+    }
+  ];
+
+  const blogListEl = document.getElementById('blog-list');
+  const blogContentEl = document.getElementById('blog-content');
+  const titleEl = document.getElementById('title');
+
+  // Nav links
+  const navHome = document.getElementById('nav-home');
+  const navAbout = document.getElementById('nav-about');
+  const navContact = document.getElementById('nav-contact');
+
+  /**
+   * Decodes an element's text by revealing the actual text character-by-character,
+   * replacing the rest with random characters.
+   *
+   * @param {HTMLElement} el - The element whose text we want to decode.
+   * @param {string} finalText - The final text to display.
+   * @param {number} speed - The interval speed in ms for each decoding iteration.
+   */
+  function decodeElement(el, finalText, speed) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let iterations = 0;
+    const interval = setInterval(() => {
+      el.textContent = finalText
+        .split('')
+        .map((char, idx) => (idx < iterations)
+          ? char
+          : chars[Math.floor(Math.random() * chars.length)])
+        .join('');
+      iterations++;
+      if (iterations > finalText.length) {
+        clearInterval(interval);
+      }
+    }, speed);
+  }
+
+  /**
+   * Decodes all text nodes within a container, preserving HTML structure.
+   * @param {HTMLElement} container - The container whose text nodes we want to decode.
+   * @param {number} speed - The interval speed in ms for each decoding.
+   */
+  function decodeBlogContent(container, speed) {
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      textNodes.push(walker.currentNode);
+    }
+
+    textNodes.forEach((node) => {
+      const finalText = node.nodeValue;
+      node.nodeValue = '';
+      let iterations = 0;
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      const interval = setInterval(() => {
+        node.nodeValue = finalText
+          .split('')
+          .map((char, idx) => (idx < iterations)
+            ? char
+            : chars[Math.floor(Math.random() * chars.length)])
+          .join('');
+        iterations++;
+        if (iterations > finalText.length) {
+          clearInterval(interval);
+        }
+      }, speed);
+    });
+  }
+
+  // Extract date from filename
+  function getDate(file){
+    const match = file.match(/\d{4}-\d{2}-\d{2}/);
+    if (!match) return "Unknown";
+    return match[0];
+  }
+
+  // Sort the blogs by date descending
+  blogs.sort((a,b) => {
+    return getDate(b.file).localeCompare(getDate(a.file));
+  });
+
+  function renderBlogList(){
+    blogContentEl.innerHTML = '';
+    blogListEl.innerHTML = '';
+    blogListEl.style.display = 'block';
+
+    blogs.forEach(blog => {
+      const li = document.createElement('li');
+      li.className = 'blog-item';
+
+      const a = document.createElement('a');
+      a.href = "#blog=" + blog.slug;
+      a.textContent = '';
+      decodeElement(a, blog.title, 60);
+
+      a.onclick = (e) => {
+        e.preventDefault();
+        window.location.hash = "blog=" + blog.slug;
+        loadBlogBySlug(blog.slug);
+      };
+
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'date';
+      dateSpan.textContent = getDate(blog.file);
+
+      li.appendChild(a);
+      li.appendChild(dateSpan);
+      blogListEl.appendChild(li);
+    });
+  }
+
+  function loadBlogBySlug(slug) {
+    const blog = blogs.find(b => b.slug === slug);
+    if (!blog) {
+      blogContentEl.innerHTML = "<p>Blog not found.</p>";
+      return;
+    }
+    loadBlog(blog.file, blog.url);
+  }
+
+  function loadBlog(file, blogUrl){
+    blogListEl.style.display='none';
+
+    fetch(file)
+      .then(res => res.ok ? res.text() : Promise.reject("Blog not found"))
+      .then(md => {
+        blogContentEl.innerHTML = marked.parse(md);
+
+        const back = document.createElement('div');
+        back.className='back-link';
+        back.textContent='\u2190 Back';
+        back.onclick = () => {
+          blogContentEl.innerHTML='';
+          blogListEl.style.display='block';
+          window.location.hash = "";
+        };
+        blogContentEl.prepend(back);
+
+        const shareButtons = document.createElement('div');
+        shareButtons.className = 'share-buttons';
+
+        const twitterLink = `https://twitter.com/intent/tweet?url=${encodeURIComponent(blogUrl)}`;
+        const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(blogUrl)}`;
+        const linkedInLink = `https://linkedin.com/shareArticle?url=${encodeURIComponent(blogUrl)}`;
+
+        shareButtons.innerHTML = `
+          <a href="${twitterLink}" target="_blank">Share on X</a>
+          <a href="${fbLink}" target="_blank">Share on Facebook</a>
+          <a href="${linkedInLink}" target="_blank">Share on LinkedIn</a>
+        `;
+        blogContentEl.appendChild(shareButtons);
+
+        decodeBlogContent(blogContentEl, 10);
+      })
+      .catch(() => {
+        blogContentEl.innerHTML="<p>Error loading blog.</p>";
+      });
+  }
+
+  function highlightActiveNav() {
+    [navHome, navAbout, navContact].forEach(link => link.classList.remove('active'));
+
+    const hash = window.location.hash;
+
+    if (!hash || hash === '#') {
+      navHome.classList.add('active');
+    } else if (hash === '#about') {
+      navAbout.classList.add('active');
+    } else if (hash === '#contact') {
+      navContact.classList.add('active');
+    } else if (hash.startsWith('#blog=')) {
+      navHome.classList.add('active');
+    }
+  }
+
+  function checkHashForBlog(){
+    highlightActiveNav();
+    const hash = window.location.hash;
+
+    if (hash === '#about') {
+      showAboutPage();
+      return;
+    } else if (hash === '#contact') {
+      showContactPage();
+      return;
+    } else if (hash.startsWith('#blog=')) {
+      const slug = hash.substring(6);
+      loadBlogBySlug(slug);
+    } else {
+      renderBlogList();
+    }
+  }
+
+  function showAboutPage() {
+    blogListEl.style.display = 'none';
+    blogContentEl.innerHTML = `
+      <h2>About</h2>
+      <p>Welcome to our Nietzsche Virus Lab. We specialize in forward-thinking virus research.</p>
+      <div class="back-link" style="margin-top: 15px;">\u2190 Back</div>
+    `;
+    const backLink = blogContentEl.querySelector('.back-link');
+    backLink.onclick = () => {
+      window.location.hash = '';
+    };
+  }
+
+  function showContactPage() {
+    blogListEl.style.display = 'none';
+    blogContentEl.innerHTML = `
+      <h2>Contact</h2>
+      <p>Get in touch: <a href="mailto:nietzscheviruslab@proton.me">nietzscheviruslab@proton.me</a></p>
+      <div class="back-link" style="margin-top: 15px;">\u2190 Back</div>
+    `;
+    const backLink = blogContentEl.querySelector('.back-link');
+    backLink.onclick = () => {
+      window.location.hash = '';
+    };
+  }
+
+  // Decode title and nav links on load
+  window.onload = () => {
+    // Decode the title
+    decodeElement(titleEl, "Nietzsche Virus Lab", 50); // Adjust finalText to match h1 content without <br>
+
+    // Decode nav links
+    decodeElement(navHome, "Home", 70);
+    decodeElement(navAbout, "About", 70);
+    decodeElement(navContact, "Contact", 80);
+
+    // Title goes Home when clicked
+    titleEl.onclick = () => {
+      window.location.hash = "";
+      blogContentEl.innerHTML = '';
+      blogListEl.style.display = 'block';
+      highlightActiveNav();
+    };
+
+    // Navigation link clicks
+    navHome.onclick = (e) => {
+      e.preventDefault();
+      window.location.hash = '';
+    };
+    navAbout.onclick = (e) => {
+      e.preventDefault();
+      window.location.hash = 'about';
+    };
+    navContact.onclick = (e) => {
+      e.preventDefault();
+      window.location.hash = 'contact';
+    };
+
+    checkHashForBlog();
+  };
+
+  window.addEventListener("hashchange", checkHashForBlog);
+</script>
+</body>
+</html>
