@@ -164,7 +164,7 @@
   <header>
     <!-- h1 appears first -->
     <h1 id="title">Nietzsche <br>Virus Lab</h1>
-    <p>macOS / linux malware research and red teaming stuff</p>
+    <p id="title-p">macOS / linux malware research and red teaming stuff</p>
     <!-- nav links below h1 -->
     <nav class="top-nav" aria-label="Primary Navigation">
       <a href="#" id="nav-home">Home</a>
@@ -211,6 +211,7 @@
     const blogListEl = document.getElementById('blog-list');
     const blogContentEl = document.getElementById('blog-content');
     const titleEl = document.getElementById('title');
+    const titlepEl = document.getElementById('title-p');
 
     // Nav links
     const navHome = document.getElementById('nav-home');
@@ -444,7 +445,9 @@
     // Decode title and nav links on load
     window.onload = () => {
       // Decode the title
-      decodeElement(titleEl, "Nietzsche Virus Lab", 50); 
+      decodeElement(titleEl, "Nietzsche Virus Lab", 50);
+      decodeElement(titlepEl, "macOS / linux malware research and red teaming stuff", 50);
+      
 
       // Decode nav links
       decodeElement(navHome, "Home", 70);
