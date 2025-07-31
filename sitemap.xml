@@ -2,47 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/blog/firstpost/</loc>
+		<loc>https://nietzsche.blog/blog/firstpost/</loc>
 		<lastmod>2018-05-01</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/blog/secondpost/</loc>
+		<loc>https://nietzsche.blog/blog/secondpost/</loc>
 		<lastmod>2018-07-04</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/blog/thirdpost/</loc>
+		<loc>https://nietzsche.blog/blog/thirdpost/</loc>
 		<lastmod>2018-08-24</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/blog/fourthpost/</loc>
+		<loc>https://nietzsche.blog/blog/fourthpost/</loc>
 		<lastmod>2018-09-30</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/about/</loc>
+		<loc>https://nietzsche.blog/about/</loc>
 		<lastmod>2025-07-31</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/blog/</loc>
+		<loc>https://nietzsche.blog/blog/</loc>
 		<lastmod>2025-07-31</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/</loc>
+		<loc>https://nietzsche.blog/</loc>
 		<lastmod>2025-07-31</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/tags/</loc>
+		<loc>https://nietzsche.blog/tags/</loc>
 		<lastmod>2025-07-31</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://nietzsche.blog/nietzsche-abyss/feed/feed.xml</loc>
+		<loc>https://nietzsche.blog/feed/feed.xml</loc>
 		<lastmod>2025-07-31</lastmod>
 	</url>
 </urlset>
