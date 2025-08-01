@@ -24,16 +24,18 @@
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
-		  const el = document.getElementById('title-p');
-		  if (el) {
+		  const elements = document.querySelectorAll('[data-decode]');
+		  elements.forEach((el, index) => {
 		    const finalText = el.textContent.trim();
 		    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 		    // Set initial random text
 		    el.textContent = finalText.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
-		    // Make visible and start animation
-		    el.style.visibility = 'visible';
-		    decodeElement(el, finalText, 30); // Adjust speed as needed (e.g., 30ms per iteration)
-		  }
+		    // Make visible and start animation with staggered delay
+		    setTimeout(() => {
+		      el.style.visibility = 'visible';
+		      decodeElement(el, finalText, 30); // Adjust speed as needed (e.g., 30ms per iteration)
+		    }, index * 200); // 200ms delay between each element's animation
+		  });
 		});
 // Thank you to https://github.com/daviddarnes/heading-anchors
 // Thank you to https://amberwilson.co.uk/blog/are-your-anchor-links-accessible/
