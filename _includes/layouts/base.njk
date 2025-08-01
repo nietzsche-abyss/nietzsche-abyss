@@ -44,10 +44,10 @@
 
 		{#- Add visibility styles to the CSS bundle to prevent flash of unstyled content during animation #}
 		<style>
-			.no-js #title-p {
+			.no-js [data-decode] {
 				visibility: visible;
 			}
-			.js #title-p {
+			.js [data-decode] {
 				visibility: hidden;
 			}
 		</style>
@@ -57,14 +57,14 @@
 
 		<header>
 			<a href="/" class="home-link">{{ metadata.title }}</a>
-      <p id="title-p">{{ metadata.description }}</p>
+			<p id="title-p" data-decode>{{ metadata.description }}</p>
 
 			{#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
 			<nav>
 				<h2 class="visually-hidden">Top level navigation menu</h2>
 				<ul class="nav">
 				{%- for entry in collections.all | eleventyNavigation %}
-					<li class="nav-item"><a href="{{ entry.url }}"{% if entry.url == page.url %} aria-current="page"{% endif %}>{{ entry.title }}</a></li>
+					<li class="nav-item"><a href="{{ entry.url }}"{% if entry.url == page.url %} aria-current="page"{% endif %} data-decode>{{ entry.title }}</a></li>
 				{%- endfor %}
 				</ul>
 			</nav>
@@ -78,7 +78,7 @@
 
 		<footer>
 			<p>
-				<em>2025 Nietzsche Virus Lab</em>
+				<em data-decode>2025 Nietzsche Virus Lab</em>
 			</p>
 		</footer>
 
@@ -112,16 +112,18 @@
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
-		  const el = document.getElementById('title-p');
-		  if (el) {
+		  const elements = document.querySelectorAll('[data-decode]');
+		  elements.forEach((el, index) => {
 		    const finalText = el.textContent.trim();
 		    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 		    // Set initial random text
 		    el.textContent = finalText.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
-		    // Make visible and start animation
-		    el.style.visibility = 'visible';
-		    decodeElement(el, finalText, 30); // Adjust speed as needed (e.g., 30ms per iteration)
-		  }
+		    // Make visible and start animation with staggered delay
+		    setTimeout(() => {
+		      el.style.visibility = 'visible';
+		      decodeElement(el, finalText, 30); // Adjust speed as needed (e.g., 30ms per iteration)
+		    }, index * 200); // 200ms delay between each element's animation
+		  });
 		});
 		{% endjs %}
 
