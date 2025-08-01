@@ -227,6 +227,10 @@ header {
 	text-decoration: underline;
 }
 
+.nav-item a {
+	color: rgb(0, 113, 227);
+}
+
 /* Posts list */
 .postlist {
 	counter-reset: start-from var(--postlist-index);
