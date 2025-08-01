@@ -1,3 +1,40 @@
+/**
+		 * Decodes an element's text by revealing the actual text character-by-character,
+		 * replacing the rest with random characters.
+		 *
+		 * @param {HTMLElement} el - The element whose text we want to decode.
+		 * @param {string} finalText - The final text to display.
+		 * @param {number} speed - The interval speed in ms for each decoding iteration.
+		 */
+		function decodeElement(el, finalText, speed) {
+		  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+		  let iterations = 0;
+		  const interval = setInterval(() => {
+		    el.textContent = finalText
+		      .split('')
+		      .map((char, idx) => (idx < iterations)
+		        ? char
+		        : chars[Math.floor(Math.random() * chars.length)])
+		      .join('');
+		    iterations++;
+		    if (iterations > finalText.length) {
+		      clearInterval(interval);
+		    }
+		  }, speed);
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+		  const el = document.getElementById('title-p');
+		  if (el) {
+		    const finalText = el.textContent.trim();
+		    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+		    // Set initial random text
+		    el.textContent = finalText.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+		    // Make visible and start animation
+		    el.style.visibility = 'visible';
+		    decodeElement(el, finalText, 30); // Adjust speed as needed (e.g., 30ms per iteration)
+		  }
+		});
 // Thank you to https://github.com/daviddarnes/heading-anchors
 // Thank you to https://amberwilson.co.uk/blog/are-your-anchor-links-accessible/
 
@@ -225,3 +262,4 @@ class HeadingAnchors extends HTMLElement {
 HeadingAnchors.register();
 
 export { HeadingAnchors }
+document.documentElement.classList.replace('no-js', 'js');
