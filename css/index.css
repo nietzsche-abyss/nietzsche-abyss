@@ -227,7 +227,7 @@ header {
 	text-decoration: underline;
 }
 
-.nav-item a {
+.nav .nav-item a {
 	color: rgb(0, 113, 227);
 }
 
