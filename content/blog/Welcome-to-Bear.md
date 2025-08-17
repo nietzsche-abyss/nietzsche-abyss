@@ -1,3 +1,10 @@
+---
+title: Welcome to Bear 👋
+description: This is a post on My Blog about agile frameworks.
+date: 2025-08-08
+tags: another tag
+---
+
 # Welcome to Bear 👋
 
 ![](Welcome%20to%20Bear%20%F0%9F%91%8B/Welcome%20-%20Illo%202.png)
